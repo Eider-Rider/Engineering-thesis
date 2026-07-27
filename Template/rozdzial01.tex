@@ -1,0 +1,31 @@
+\chapter{Wstęp}
+\section{Wprowadzenie}
+Niniejszy dokument powstał z myślą o ujednoliceniu sposobu redagowania prac dyplomowych magisterskich i inżynierskich poprzez sformułowanie reguł redakcyjnych oraz dostarczenie gotowego do wykorzystania szablonu, przygotowanego do kompilacji w systemie \LaTeX{}. Szablon ten można dostosować do własnych potrzeb, aby po kompilacji uzyskać dobrze sformatowaną pracę dyplomową w formacie \texttt{pdf}.  
+
+W szablonie dostarczono zalecenia i uwagi o charakterze technicznym (dotyczące takich zagadnień, jak na przykład: formatowanie tekstu, załączanie rysunków, układ strony) oraz edytorskim (odnoszące się do stylu wypowiedzi, sposobów tworzenia referencji itp.). Są one widocznego w~wynikowym pliku \texttt{pdf}.
+W kodzie źródłowym szablonu (tj.\ plikach \texttt{tex}) znajdują się komentarze, które mają ułatwić zrozumienie znaczenia użytych latexowych komend i ustawień. 
+
+Szablon przygotowano do kompilacji narzędziem \texttt{pdflatex} należącym do dystrybucji systemu \LaTeX. Aby skorzystać z szablonu należy mieć dostęp do tego narzędzia (czyli mieć zainstalowany system \LaTeX). Można też skorzystać z usług kompilacji \LaTeX-owych źródeł dostępnych on-line. Jednym z popularniejszych serwisów tego typu jest \texttt{OverLeaf}. Wymaga on jedna, by pliki należące do szablonu były zakodowane w UTF8 oraz by w głównym pliku szablonu \texttt{Dyplom.tex} pojawiły się odpowiednie komendy.
+
+Na pierwszy rzut oka kod źródłowy szablonu (w szczególności kod głównego dokumentu \texttt{Dyplom.tex}) może wydać się nieco skomplikowany. Zdecydowano bowiem, by zamiast tworzyć osobną klasę dokumentu wykorzystać istniejącą klasę, oferującą zestaw komend ułatwiających składanie tekstu. Wybór padł na klasę \texttt{memoir}. W efekcie szablon utworzono jako sparametryzowaną instancję tej klasy. 
+
+Sam sposób użycia szablonu jest dość prosty. Wystarczy zamieścić należące do niego pliku w~katalogu roboczym, następnie podmienić wartości atrybutów komend użytych do zdefiniowania zawartości strony tytułowej (poprzez nadpisanie metadanych definiujących tytuł, autora, promotora, kierunek, specjalność, słowa kluczowe) oraz zadeklarować strukturę dokumentu (poprzez odpowiednie dołączenie pozostałych dokumentów i nadpisanie ich zawartości). 
+
+Szablon zapewnia dołączenie metadanych z podstawowymi informacjami (tytuł, autor, temat, słowa kluczowe, data) do wynikowego dokumentu \texttt{pdf}. Metadane te będą widoczne we właściwościach dokumentu, gdy zacznie się go przeglądać w jakiejś przeglądarce \texttt{pdf} (np.~\texttt{SumatraPDF} lub \texttt{Acrobat Reader}). Niestety, system \LaTeX{} nie wspiera tworzenia dostępnych plików \texttt{pdf} (zgodnych ze standardami PDF/UA, WCAG 2.0/2.1/2.2).
+
+Szablon pracy dyplomowej nie wiąże się bezpośrednio z tzw.\ ,,Kartą tematu pracy dyplomowej''. Karty tematów są syntetycznymi opisami, które podlegają oficjalnej procedurze zgłaszania, zatwierdzania i wybierania (finalizowanej dokonaniem wpisu studenta na kurs ,,Praca dyplomowa''). Formalnie zawartość kart tematów prac dyplomowych regulowana jest uczelnianymi zarządzeniami. Przystępując do redakcji pracy dyplomowej z wykorzystaniem niniejszego szablonu należy pamiętać o obowiązku zachowania zgodności prezentowanych treści z zawartością karty tematu (merytorycznie musi się wszystko zgadzać z formalnie zgłoszonym tematem).
+
+Zasadniczo tematy prac inżynierskich wiążą się z wykonaniem jakiegoś konkretnego dzieła (produktu). Formułując cel używa się zwrotów: budowa, implementacja, projekt, przeprowadzenia itp. Rolą dyplomanta (na kierunku informatyka) jest dostarczenie dzieła (przynajmniej w~formie prototypu, spełniającego podstawowe wymagania funkcjonalne). Niniejszy szablon pozwolić ma na opisanie tego dzieła.
+
+Nieco inaczej jest w przypadku tematów prac magisterskich. Tutaj temat wraz z opisem celu i zakresu wyznaczać mają jakiś kierunek badań czy analiz. Zwykle podczas formułowania tematów i opisów tego typu prac stosuje się słowa: badanie, analiza, przegląd, charakterystyka itp. Rolą magistranta jest eksploracja wyznaczonego kierunku, dobre uwarunkowanie analizowanych problemów, przeprowadzenie badań, dostarczenie odpowiedzi. Niniejszy szablon w tym przypadku posłużyć ma za ramy, dzięki którym praca może przyjąć formę dokumentu naukowego.
+
+Po kompilacji szablonu wynikowy dokument \texttt{Dyplom.pdf} należy załadować do systemu APD.USOS (\url{https://apd.usos.pwr.edu.pl/}) celem weryfikacji antyplagiatowej i dalszego procesowania. System APD.USOS zmieni nazwę załadowanemu plikowi na taką, w której ukryty jest kod wydziału, kod kierunku, typ pracy i jeszcze parę innych danych. Nazwa ta przyjmuje, przykładowo, następującą postać: \texttt{W4N\_\#\#\#\#\#\#\_W04-ITE-INZ\_W04-ITEP-000P-OSIW7.pdf}, gdzie \texttt{\#\#\#\#\#\#} to miejsce na numer indeksu dyplomanta. 
+
+Podczas ładowania wynikowego dokumentu można do systemu APD.USOS załadować również kody źródłowe stworzonego dzieła, dokumentację techniczną itp. Istnieją jednak ograniczenia na wielkość takich dodatkowych plików. W szczególnych przypadkach może zdarzyć się, że system APD.USOS nie przyjmie dodatkowych plików, co zdarza się, gdy efektem pracy jest np.\ obraz systemu, skonfigurowany ze wszystkimi zależnościami oraz z zainstalowanym ,,dziełem''. Sprawę sposobu dostarczenia kodów źródłowych stworzonego dzieła recenzentowi należy wtedy wyjaśnić z promotorem.
+
+\section{Układ dokumentu}
+W rozdziale pierwszym przedstawiono w zarysie czym jest i czego dotyczy niniejszy dokument (jest to szablon, który można zastosować podczas redagowania pracy dyplomowej inżynierskiej bądź magisterskiej). W rozdziale drugim opisano sposób pracy z szablonem. W kolejnym, trzecim rozdziale, przedstawiono zalecenia dotyczące formatowania dokumentu. Rozdział ten pełni rolę czysto informacyjną (dostarczony szablon zapewnia uzyskanie opisanego tam formatowania).
+W rozdziale czwartym zwrócono uwagę na redakcję pracy dyplomowej (od strony edytorskiej i merytorycznej).
+Rozdział piąty poświęcono na uwagi techniczne. Ostatni, szósty rozdział, przeznaczono na kilka słów podsumowania oraz ,,lorem ipsum'' -- wygenerowany tekst, pełniący rolę ,,wypełniacza'', wykorzystany w celach poglądowych (jak dzielić dokument na sekcje).
+Pracy towarzyszy przykładowy wykaz literatury oraz przykładowe dwa dodatki. 
+
