@@ -1,9 +1,36 @@
 \chapter{Analiza wymagań i projekt systemu}
 \section{Przegląd istniejących rozwiązań}
+Aby dobrze sprecyzować wymagania, aplikacje wymienione we wstępie poddano głębszej analizie. 
+Pozwoliła ona na zidentyfikowanie mocnych i słabych stron, które posłużyły jako inspiracja do stworzenia własnego systemu.
+Wyniki tej analizy zamieszczono poniżej
 \subsection{BlaBlaCar}
+BlaBlaCar to jedna z największych platform do organizowania wspólnych przejazdów na świecie. 
+Umożliwia użytkownikom oferowanie i wyszukiwanie przejazdów, a także ocenianie kierowców i pasażerów. 
+System ten charakteryzuje się intuicyjnym interfejsem użytkownika oraz szeroką bazą użytkowników, co zwiększa szanse na znalezienie odpowiedniego przejazdu. 
+Jednakże, platforma ta ma również swoje wady, takie jak pobierane opłaty za korzystanie z usług oraz ograniczenia w 
+zakresie dostępności w niektórych regionach (np.\ w Stanach Zjednoczonych). Ponadto, do wyników wyszukiwania przejazdów dodawane są oferty komunikacji zbiorowej,
+takie jak autobusy czy pociągi. Może to wpłynąć na łatwość znalezienia przejazdu samochodem, który może być głównym celem użytkownika.
 \subsection{InOneCar}
+InOneCar to polska aplikacja do organizacji wspólnych przejazdów, głównie na Dolnym Śląsku.
+Podobnie jak BlaBlaCar, umożliwia użytkownikom oferowanie i wyszukiwanie przejazdów, obliczanie kosztów i zarządzanie rezerwacjami na przejazdy. 
+Jednakże, w przeciwieństwie do BlaBlaCar, InOneCar nie pobiera opłat za korzystanie z usług.
+Problemem tej platformy jest brak swobody w oferowaniu przejazdów. Kierowcy mogą oferować przejazdy wyłącznie na trasach, które zostały wcześniej zdefiniowane
+przez administratorów systemu. Jak wspomniano we wstępie, kryterium stworzenia ,,korytarza'' jest wystarczająca liczba zgłoszeń kierowców i pasażerów na danej trasie. 
+W przypadku braku wystarczającej liczby zgłoszeń, kierowcy nie mogą oferować przejazdów na tej trasie. Zdecydowanie ogranicza to swobodę kierowców w oferowaniu przejazdów
+na mało popularnych trasach, co pogarsza sytuację wykluczenia komunikacyjnego w mniejszych miejscowościach.
 \section{Analiza wymagań funkcjonalnych i niefunkcjonalnych}
+Aplikacja pozwala użytkownikom na oferowanie i wyszukiwanie przejazdów oraz zarządzanie rezerwacjami na przejazdy. 
+W tym celu wyszczególniono 2 główne role w procesie korzystania z aplikacji: kierowcę i pasażera. 
+
+Poza wyznaczeniem punktów startu i końca przejazdu oraz planowanej daty i godziny odjazdu, kierowca może przyjmować rezerwacje miejsc w swoim samochodzie od pasażerów.
+Aby ograniczyć liczbę rezerwacji, jaką kierowca może zaakceptować na daną ofertę przejazdu, kierowca musi podać liczbę wolnych miejsc w aucie. 
+Kierowca musi również określić podstawowe dane dotyczące swojego pojazdu, takie jak ogólny opis (np.\ model, marka, kolor), 
+numer rejestracyjny oraz uśrednione spalanie paliwa, wykorzystywane do propozycji podziału kosztów przejazdu.
+
+Sam pasażer, podobnie jak kierowca, określa punkt na mapie i promień, wokół którego ma być wyszukiwana oferta przejazdu, punkt docelowy, oraz planowaną datę odjazdu.
+Aplikacja znajduje najlepiej dopasowaną ofertę przejazdu, a następnie pozwala pasażerowi na dokonanie rezerwacji miejsca w samochodzie kierowcy.
+Po złożeniu rezerwacji, kierowca może ją zaakceptować lub odrzucić. W obu przypadkach, pasażer widzi aktualny status swojej rezerwacji w aplikacji. 
+W przypadku akceptacji rezerwacji, pasażer otrzymuje dane kontaktowe do kierowcy.
 \subsection{Diagram wymagań SysML}
 \section{Architektura i projekt systemu}
 \subsection{Model architektury oprogramowania}
-\subsection{Model fizyczny bazy danych}
