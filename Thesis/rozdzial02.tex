@@ -1,15 +1,14 @@
 \chapter{Analiza wymagań i projekt systemu}
 \section{Przegląd istniejących rozwiązań}
-Aby dobrze sprecyzować wymagania, aplikacje wymienione we wstępie poddano głębszej analizie. 
-Pozwoliła ona na zidentyfikowanie mocnych i słabych stron, które posłużyły jako inspiracja do stworzenia własnego systemu.
-Wyniki tej analizy zamieszczono poniżej.
+Aplikacje wymienione we wstępie poddano głębszej analizie. Pozwoliła ona zidentyfikować mocne i słabe strony aplikacjii dała inspirację do sprecyzowania wymagań do własnego systemu. Poniżej przedstawiono wyniki tej analizy.
+
 \subsection{BlaBlaCar}
 BlaBlaCar to jedna z największych platform do organizowania wspólnych przejazdów na świecie. 
-Umożliwia użytkownikom oferowanie i wyszukiwanie przejazdów, a także ocenianie kierowców i pasażerów. 
-System ten charakteryzuje się intuicyjnym interfejsem użytkownika oraz szeroką bazą użytkowników, co zwiększa szanse na znalezienie odpowiedniego przejazdu. 
-Jednakże, platforma ta ma również swoje wady, takie jak pobierane opłaty za korzystanie z usług oraz ograniczenia w 
-zakresie dostępności w niektórych regionach (np.\ w Stanach Zjednoczonych). Ponadto, do wyników wyszukiwania przejazdów dodawane są oferty komunikacji zbiorowej,
+Pozwala ona użytkownikom na oferowanie i wyszukiwanie przejazdów, a także ocenianie kierowców i pasażerów. 
+Charakteryzuje się intuicyjnym interfejsem użytkownika oraz szeroką bazą użytkowników, co zwiększa szanse na znalezienie odpowiedniego przejazdu. 
+Ma ona również swoje wady, jak pobierane opłat za korzystanie z usług oraz ograniczą dostępność w niektórych regionach (np.\ w Stanach Zjednoczonych). Ponadto, do wyników wyszukiwania przejazdów dodawane są oferty komunikacji zbiorowej,
 takie jak autobusy czy pociągi. Może to wpłynąć na łatwość znalezienia przejazdu samochodem, który może być głównym celem użytkownika.
+% TO DO: aby "upiększyć" pracę może Pan zamieścić zrzuty z ekranów opisywanych aplikacji (prawo cytatu pozwala takie zrzuty zrobić)
 \subsection{InOneCar}
 InOneCar to polska aplikacja do organizacji wspólnych przejazdów, głównie na Dolnym Śląsku.
 Podobnie jak BlaBlaCar, umożliwia użytkownikom oferowanie i wyszukiwanie przejazdów, obliczanie kosztów i zarządzanie rezerwacjami na przejazdy. 
@@ -18,9 +17,10 @@ Problemem tej platformy jest brak swobody w oferowaniu przejazdów. Kierowcy mog
 przez administratorów systemu. Jak wspomniano we wstępie, kryterium stworzenia ,,korytarza'' jest wystarczająca liczba zgłoszeń kierowców i pasażerów na danej trasie. 
 W przypadku braku wystarczającej liczby zgłoszeń, kierowcy nie mogą oferować przejazdów na tej trasie. Zdecydowanie ogranicza to swobodę kierowców w oferowaniu przejazdów
 na mało popularnych trasach, co pogarsza sytuację wykluczenia komunikacyjnego w mniejszych miejscowościach.
+
 \section{Analiza wymagań funkcjonalnych i niefunkcjonalnych}
-Aplikacja pozwala użytkownikom na oferowanie i wyszukiwanie przejazdów oraz zarządzanie rezerwacjami na przejazdy. 
-W tym celu wyszczególniono 2 główne role w procesie korzystania z aplikacji: kierowcę i pasażera. 
+\subsection{Wymagania funkcjonalne}
+Aplikacja powinna umożliwiać użytkownikom oferowanie i wyszukiwanie przejazdów oraz zarządzanie rezerwacjami na przejazdy. Użytkownicy korzystający z aplikacji mogą wystąpić w niej w dwóch rolach: kierowcy oraz pasażera. 
 
 Poza wyznaczeniem punktów startu i końca przejazdu oraz planowanej daty i godziny odjazdu, kierowca może przyjmować rezerwacje miejsc w swoim samochodzie od pasażerów.
 Aby ograniczyć liczbę rezerwacji, jaką kierowca może zaakceptować na daną ofertę przejazdu, kierowca musi podać liczbę wolnych miejsc w aucie. 
@@ -31,22 +31,40 @@ Sam pasażer, podobnie jak kierowca, określa punkt na mapie i promień, wokół
 Aplikacja znajduje najlepiej dopasowaną ofertę przejazdu, a następnie pozwala pasażerowi na dokonanie rezerwacji miejsca w samochodzie kierowcy.
 Po złożeniu rezerwacji, kierowca może ją zaakceptować lub odrzucić. W obu przypadkach, pasażer widzi aktualny status swojej rezerwacji w aplikacji. 
 W przypadku akceptacji rezerwacji, pasażer otrzymuje dane kontaktowe do kierowcy.
-\subsection{Diagram wymagań SysML}
-Na podstawie powyższego opisu stworzono diagram wymagań za pomocą języka PlantUML. 
-Wyodrębniono w nim 2 aktorów: kierowcę i pasażera. Kierowca jest powiązany z wymaganiami dotyczącymi tworzenia ofert przejazdów oraz tworzenia rezerwacji, 
-natomiast pasażer z wymaganiami dotyczącymi wyszukiwania przejazdów i tworzenia rezerwacji.
-Poniższy diagram przedstawia wymagania funkcjonalne systemu, a także relacje między nimi.
+
+% TO DO: to nie jest diagram wymagań SysML tylko jakiś wariant diagramu przypadków użycia !!!!!!
+% Proszę poczytać czym jest "requirements diagram" w SysML - by nie zrobić grubego błędu na egzaminie
+% przykładowy materiał może Pan znaleźć na stronie: https://www.cybermedian.com/mastering-traceability-a-comprehensive-guide-to-sysml-requirement-diagrams-with-visual-paradigm/
+% 
+%\subsection{Diagram wymagań SysML}
+Na podstawie powyższego opisu stworzono diagram wymagań jak na rysunku~\ref{fig:requirements-diagram}. 
+% TO DO: Proszę starać się omijać sformułowania "na poniższym" bo rysunki mogą "pływać"
+Wyodrębniono w nim 2 aktorów: kierowcę i pasażera. Kierowca jest powiązany z wymaganiami dotyczącymi tworzenia ofert przejazdów oraz tworzenia rezerwacji, natomiast pasażer z wymaganiami dotyczącymi wyszukiwania przejazdów i tworzenia rezerwacji.
+% TO DO: diagram przerysowałem w drawio. źródła są na repozytorium. Pozostałe diagramy można też przerysować używając tego narzędzia.
+
 % Na razie wstawione w ten sposób, nie wiem, czy je pomniejszyć czy przerysować w mermaid albo innym narzędziu i inaczej ustawić elementy
 % Przy użyciu \usepackage{float} i opcji [H] tekst się bardzo rozjeżdża, 
 % na razie zostawię jak jest a jak tekst rozdziału 2 będzie gotowy to wtedy się poprawi
-\begin{figure}[h]
+\begin{figure}[htb]
 	\centering
-	\includegraphics[width=0.7\linewidth]{rys02/Use_case_diagram_upscaled.pdf}
+	\includegraphics[scale=1]{rys02/Use_case_diagram_upscaled-01}
 	\caption{Diagram wymagań systemu}
 	\label{fig:requirements-diagram}
 \end{figure}
+% TO DO: diagramy przypadków użycia powinny mieć opis (wyspecyfikowane warunku wstępne, końcowe, aktorów, przebiegi (w tym alternatywne) itd. Bez tego uszczegółowienia jest zbyt wiele miejsca na niewłaściwą interpretację.
+%       Czasem jednak notacja diagramów przypadków użycia jest używana do tworzenia zestawień funkcji systemu (czyli nie "przypadków użycia" tylko "funkcji, jakie oferuje". Semantycznie to nie to samo. Zakładam, że zaprezentowany diagram jest poglądowym zestawem funkcji. Powinien Pan jakoś zaznaczyć, że taki charakter ma właśnie Pana diagramu i dlatego nie ma szczegółowych opisów.
 
-\section{Architektura i projekt systemu}
+% TO DO: w uzupełnieniu do wymagań funkcjonalnych przydałaby się sekcja z makietami interfejsu użytkownika (choć nie będę się przy niej upierał)
+\section{Makiety interfejsu użytkownia}
+% TO DO: w układzie pracy brakuje wyróżnionych wymagań niefunkcjonalych
+
+\section{Wymagania niefunkcjonalne}
+% TO DO: tutaj powinien Pan opisać wymagania niefunkcjonalne (jaki będzie wolumen przetwarzanych danych, jakie będą wymagane zasoby, jakie zostaną wykorzystane systemy i biblioteki, jakie będą oczekiwania względem wydajności i jakości serwisu, przy jakich założeniach architektonicznych ma powstać aplikacja itp.
+
+% TO DO: Wymaganiach powinno opisywać się w trybie niedokonanym (ma być, a nie jest). Natomiast Pan zredagował opis w trybie dokonanym (zaprojektowano, zrobiono, jest). Tryb dokonany zwykla włącza się przy opisie implementacji, gdy informuje się czytelnika jak przekuto założenia na działający produkt.
+
+
+\subsection{Architektura i projekt systemu}
 System zaprojektowano w oparciu o architekturę klient-serwer, w której aplikacja internetowa pełni rolę klienta HTTP, a serwer obsługuje logikę biznesową i przechowuje dane w bazie danych.
 Sam serwer został podzielony na kilka modułów, z których każdy odpowiada za określoną funkcjonalność systemu.
 
@@ -54,32 +72,39 @@ Sam serwer został podzielony na kilka modułów, z których każdy odpowiada za
 Wszystkie zapytania klienta HTTP do autoryzowanych punktów końcowych są uwierzytelniane za pomocą JWT (ang.~\emph{JSON Web Token}), 
 który weryfikuje tożsamość użytkownika i jego uprawnienia do korzystania z wymaganych funkcji.
 
-Pomiędzy modułem \emph{API} a modułem logiki biznesowej \emph{Core} znajduje się mediator, który ma na celu zmniejszenie sprzężenia między tymi modułami.
+Pomiędzy modułem \texttt{API} a modułem logiki biznesowej \texttt{Core} znajduje się mediator, który ma na celu zmniejszenie sprzężenia między tymi modułami.
 Mediator jest odpowiedzialny za przekazywanie żądań od punktów końcowych API do odpowiednich funkcji logiki biznesowej, a także za zwracanie wyników z powrotem do klienta.
 Moduł Core zawiera wszystkie funkcje logiki biznesowej i serwisy, które są wykorzystywane przez kontrolery API. 
 Posiada on 2 podmoduły: 
+% TO DO: proszę stosować czcionkę maszynową do kodu, nazw plików itp. (zalecenie było w szablonie pracy!!!)
 \begin {itemize}
-    \item \emph{Core.Auth} - zawiera serwisy odpowiedzialne za autoryzację i uwierzytelnianie użytkowników,
-    \item \emph{Core.Common} - zawiera używane w wielu miejscach wyjątki i klasy pomocnicze.
+    \item \texttt{Core.Auth} - zawiera serwisy odpowiedzialne za autoryzację i uwierzytelnianie użytkowników,
+    \item \texttt{Core.Common} - zawiera używane w wielu miejscach wyjątki i klasy pomocnicze.
 \end{itemize}
 
-Komunikacja z bazą danych odbywa się za pomocą klas zdefiniowanych w module \emph{Persistence}.
+Komunikacja z bazą danych odbywa się za pomocą klas zdefiniowanych w module \texttt{Persistence}.
 Głównym zadaniem tego modułu jest definiowanie oraz mapowanie obiektów na tabele w bazie danych, generowanie danych testowych i wykonywanie migracji bazy danych.
 % O szczegółach implementacji (bibliotekach, framework'u itp.) miałem zamiar napisać w rozdziale 3, 
 % stąd brak terminów typowo .NET'owych ani wzmianek o wybranych technologiach w tym rozdziale.
+
+% TO DO: przerysowałem diagram. Po polsku mówi się "uwierzytelnienie" a nie "autentykacja"
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\linewidth]{rys02/Architecture_diagram_transparent.pdf}
+	\includegraphics[scale=1]{rys02/Architecture_diagram_transparent-01}
 	\caption{Diagram architektury systemu}
 	\label{fig:architecture-diagram}
 \end{figure}
-\subsection{Model fizyczny bazy danych}
+
+
+% TO DO: tutaj powinien pojawić się model konceptualny, a nie fizycznmy. W produkcyjnym pisaniu kodu zanim zacznie się implementację trzeba rozpoznać co tak naprawdę będzie przetwarzane. Jednak często programiści, zwłaszcza ci, co korzystają z ORM, zaczynają od razu pisać klasy encji (bez głębszego refleksji po co i jak). Proszę się zastanowić, jak przeredagować poniższy tekst, by przyjął on formę "założeń", a nie "raportu z implementacji"
+\subsection{Model danych}
 % Ze względu na charakter diagramu, czy nie lepsze będzie uwzględnienie go w rozdziale 3, w którym opisuję implementację?
 Aby zrealizować wymagane funkcje systemu, zaprojektowano bazę danych, której model fizyczny przedstawiono na rysunku \ref{fig:entity-relationship-diagram}.
 Składa się ona z 7 tabel, które przechowują informacje o użytkownikach, tokenach odświeżania, pojazdach, trasach i rezerwacjach.
-Same encje oraz ich relacje zostały zdefiniowane w module \emph{Persistence} za pomocą ORM (ang.~\emph{Object-Relational Mapper}).
+Same encje oraz ich relacje zostały zdefiniowane w module \texttt{Persistence} za pomocą ORM (ang.~\emph{Object-Relational Mapper}).
 Dzięki mechanizmowi migracji, pozwala na automatyczne generowanie i aktualizowanie struktury tabel w bazie danych bezpośrednio na podstawie kodu źródłowego.
 % Tutaj będę miał pytanie na konsultacjach co do tabel generowanych automatycznie przez framework, których na razie nie ma w diagramie.
+% TO DO: rozumiem, że diagram zostanie przerysowany (nie wnikając w zawartość obecnego diagramu jest on za bardzo rozwleczony - marnowane jest za dużo przestrzeni)
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{rys02/Entity_relatioship_diagram.pdf}

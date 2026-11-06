@@ -1,0 +1,120 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="Strona-1" id="xgoGXtdSs-0FIVOA9wsi">
+    <mxGraphModel dx="1113" dy="835" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-23" value="Eider-Rider.Persistence" style="rounded=0;whiteSpace=wrap;html=1;movableLabel=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="190" y="285" width="340" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-5" value="Eider-Rider.Api . ASP.NET Core" style="rounded=0;whiteSpace=wrap;html=1;movableLabel=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="330" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="w0ryRJUlp5gfDqmN9LER-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="80" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-1" value="Klient HTTP" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="70" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-2" target="w0ryRJUlp5gfDqmN9LER-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-2" value="&lt;div&gt;Uwierzytelnianie&lt;/div&gt;&lt;div&gt;(JWT)&lt;/div&gt;&lt;div&gt;i autoryzacja&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="55" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-3" target="w0ryRJUlp5gfDqmN9LER-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-3" value="&lt;div&gt;Punkty końcowe&lt;/div&gt;&lt;div&gt;HTTP&lt;/div&gt;&lt;div&gt;Samochody&lt;/div&gt;&lt;div&gt;Rezerwacje&lt;/div&gt;&lt;div&gt;Trasy&lt;/div&gt;&lt;div&gt;Użytkownicy&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="35" width="90" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-4" value="&lt;div&gt;DispatchR&lt;/div&gt;&lt;div&gt;mediator&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="55" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-9" value="Wspólne serwisy" style="rounded=0;whiteSpace=wrap;html=1;movableLabel=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="10" y="135" width="170" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-10" value="&lt;div&gt;Eider-Rider.Core.Auth&lt;/div&gt;&lt;div&gt;TokenService&lt;/div&gt;&lt;div&gt;RefreshTokenService&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="165" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-11" value="&lt;div&gt;Eider-&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Rider.Core.Common&lt;/span&gt;&lt;/div&gt;&lt;div&gt;AuthorizedUserProvider&lt;/div&gt;&lt;div&gt;opcje · wyjątki&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="225" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-12" value="Eider-Rider.Core . Logika biznesowa" style="rounded=0;whiteSpace=wrap;html=1;movableLabel=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="240" y="150" width="290" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="w0ryRJUlp5gfDqmN9LER-14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="230" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1.002;entryY=0.604;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-13" target="w0ryRJUlp5gfDqmN9LER-10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="210" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1.002;entryY=0.197;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-13" target="w0ryRJUlp5gfDqmN9LER-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="210" y="235" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-13" target="w0ryRJUlp5gfDqmN9LER-25">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="280" />
+              <mxPoint x="370" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-13" value="&lt;div&gt;Komendy i&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;zapytania&lt;/span&gt;&lt;/div&gt;&lt;div&gt;Samochody&lt;/div&gt;&lt;div&gt;Rezerwacje&lt;/div&gt;&lt;div&gt;Trasy&lt;/div&gt;&lt;div&gt;Użytkownicy&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="175" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-14" value="RouteMatchingService" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="205" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.999;entryY=0.275;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-4" target="w0ryRJUlp5gfDqmN9LER-13">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="475" y="197" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-24" target="w0ryRJUlp5gfDqmN9LER-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-24" value="&lt;div&gt;ASP.NET Core&lt;/div&gt;&lt;div&gt;Identity&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="315" width="90" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-25" value="&lt;div&gt;EiderRiderDbContext&lt;/div&gt;&lt;div&gt;EF Core&lt;/div&gt;&lt;div&gt;Migracje&lt;/div&gt;&lt;div&gt;Dane testowe&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="315" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-28" value="&lt;div&gt;Encje&lt;/div&gt;&lt;div&gt;Samochody&lt;/div&gt;&lt;div&gt;Rezerwacje&lt;/div&gt;&lt;div&gt;Trasy&lt;/div&gt;&lt;div&gt;Użytkownicy&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="315" width="70" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-30" value="&lt;div&gt;PostgreSQL&lt;/div&gt;&lt;div&gt;PostGIS &lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;pgRouting&lt;/span&gt;&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="80" y="325" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=1;entryDx=0;entryDy=-15;entryPerimeter=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-25" target="w0ryRJUlp5gfDqmN9LER-30">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.004;entryY=0.379;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-25" target="w0ryRJUlp5gfDqmN9LER-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="w0ryRJUlp5gfDqmN9LER-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="w0ryRJUlp5gfDqmN9LER-13" target="w0ryRJUlp5gfDqmN9LER-24">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="280" />
+              <mxPoint x="245" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
