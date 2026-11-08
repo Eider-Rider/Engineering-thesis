@@ -1,6 +1,6 @@
 \chapter{Analiza wymagań i projekt systemu}
 \section{Przegląd istniejących rozwiązań}
-Aplikacje wymienione we wstępie poddano głębszej analizie. Pozwoliła ona zidentyfikować mocne i słabe strony aplikacjii dała inspirację do sprecyzowania wymagań do własnego systemu. Poniżej przedstawiono wyniki tej analizy.
+Aplikacje wymienione we wstępie poddano głębszej analizie. Pozwoliła ona zidentyfikować mocne i słabe strony aplikacji dała inspirację do sprecyzowania wymagań do własnego systemu. Poniżej przedstawiono wyniki tej analizy.
 
 \subsection{BlaBlaCar}
 BlaBlaCar to jedna z największych platform do organizowania wspólnych przejazdów na świecie. 
@@ -36,15 +36,12 @@ W przypadku akceptacji rezerwacji, pasażer otrzymuje dane kontaktowe do kierowc
 % Proszę poczytać czym jest "requirements diagram" w SysML - by nie zrobić grubego błędu na egzaminie
 % przykładowy materiał może Pan znaleźć na stronie: https://www.cybermedian.com/mastering-traceability-a-comprehensive-guide-to-sysml-requirement-diagrams-with-visual-paradigm/
 % 
-%\subsection{Diagram wymagań SysML}
+\subsection{Diagram wymagań UML}
 Na podstawie powyższego opisu stworzono diagram wymagań jak na rysunku~\ref{fig:requirements-diagram}. 
 % TO DO: Proszę starać się omijać sformułowania "na poniższym" bo rysunki mogą "pływać"
 Wyodrębniono w nim 2 aktorów: kierowcę i pasażera. Kierowca jest powiązany z wymaganiami dotyczącymi tworzenia ofert przejazdów oraz tworzenia rezerwacji, natomiast pasażer z wymaganiami dotyczącymi wyszukiwania przejazdów i tworzenia rezerwacji.
 % TO DO: diagram przerysowałem w drawio. źródła są na repozytorium. Pozostałe diagramy można też przerysować używając tego narzędzia.
-
-% Na razie wstawione w ten sposób, nie wiem, czy je pomniejszyć czy przerysować w mermaid albo innym narzędziu i inaczej ustawić elementy
-% Przy użyciu \usepackage{float} i opcji [H] tekst się bardzo rozjeżdża, 
-% na razie zostawię jak jest a jak tekst rozdziału 2 będzie gotowy to wtedy się poprawi
+Diagram wymagań systemu jest jedynie poglądowym zestawem funkcji oferowanymi przez program, stąd brak szczegółowych opisów poszczególnych przypadków użycia.
 \begin{figure}[htb]
 	\centering
 	\includegraphics[scale=1]{rys02/Use_case_diagram_upscaled-01}
@@ -53,16 +50,27 @@ Wyodrębniono w nim 2 aktorów: kierowcę i pasażera. Kierowca jest powiązany 
 \end{figure}
 % TO DO: diagramy przypadków użycia powinny mieć opis (wyspecyfikowane warunku wstępne, końcowe, aktorów, przebiegi (w tym alternatywne) itd. Bez tego uszczegółowienia jest zbyt wiele miejsca na niewłaściwą interpretację.
 %       Czasem jednak notacja diagramów przypadków użycia jest używana do tworzenia zestawień funkcji systemu (czyli nie "przypadków użycia" tylko "funkcji, jakie oferuje". Semantycznie to nie to samo. Zakładam, że zaprezentowany diagram jest poglądowym zestawem funkcji. Powinien Pan jakoś zaznaczyć, że taki charakter ma właśnie Pana diagramu i dlatego nie ma szczegółowych opisów.
-
-% TO DO: w uzupełnieniu do wymagań funkcjonalnych przydałaby się sekcja z makietami interfejsu użytkownika (choć nie będę się przy niej upierał)
-\section{Makiety interfejsu użytkownia}
-% TO DO: w układzie pracy brakuje wyróżnionych wymagań niefunkcjonalych
-
-\section{Wymagania niefunkcjonalne}
+\subsection{Wymagania niefunkcjonalne}
 % TO DO: tutaj powinien Pan opisać wymagania niefunkcjonalne (jaki będzie wolumen przetwarzanych danych, jakie będą wymagane zasoby, jakie zostaną wykorzystane systemy i biblioteki, jakie będą oczekiwania względem wydajności i jakości serwisu, przy jakich założeniach architektonicznych ma powstać aplikacja itp.
-
+% DONE: Dodałem listę wymagań niefunkcjonalnych
 % TO DO: Wymaganiach powinno opisywać się w trybie niedokonanym (ma być, a nie jest). Natomiast Pan zredagował opis w trybie dokonanym (zaprojektowano, zrobiono, jest). Tryb dokonany zwykla włącza się przy opisie implementacji, gdy informuje się czytelnika jak przekuto założenia na działający produkt.
+\begin{enumerate}
+    \item System ma umożliwiać przechowywanie danych co najmniej 500 użytkowników, 1000 ofert przejazdów oraz 2000 rezerwacji.
 
+    \item System ma obsługiwać co najmniej 100 jednoczesnych użytkowników w typowym scenariuszu korzystania z aplikacji.
+
+    \item Operacje typu wyświetlanie ofert i pobieranie rezerwacji mają być realizowane w czasie nieprzekraczającym 2 sekund przy zakładanym obciążeniu.
+
+    \item Środowisko testowe ma zapewniać co najmniej 2 rdzenie procesora oraz 4\,GB pamięci RAM dla serwera aplikacji i bazy danych.
+
+    \item System ma działać w architekturze klient-serwer. Komunikacja pomiędzy klientem a serwerem ma odbywać się za pośrednictwem API wykorzystującego protokół HTTPS.
+
+    \item Dane aplikacji mają być przechowywane w relacyjnej bazie danych, a dostęp do nich ma odbywać się za pośrednictwem warstwy persystencji wykorzystującej mapowanie obiektowo-relacyjne (ORM).
+
+    \item Dostęp do poszczególnych funkcji ma być chroniony za pomocą tokenów JWT. System ma weryfikować tożsamość użytkownika oraz jego uprawnienia.
+
+    \item Aplikacja internetowa ma być dostępna poprzez najpopularniejsze dostępne przeglądarki internetowe (np.\ Chrome, Firefox).
+\end{enumerate}
 
 \subsection{Architektura i projekt systemu}
 System zaprojektowano w oparciu o architekturę klient-serwer, w której aplikacja internetowa pełni rolę klienta HTTP, a serwer obsługuje logikę biznesową i przechowuje dane w bazie danych.
@@ -77,6 +85,7 @@ Mediator jest odpowiedzialny za przekazywanie żądań od punktów końcowych AP
 Moduł Core zawiera wszystkie funkcje logiki biznesowej i serwisy, które są wykorzystywane przez kontrolery API. 
 Posiada on 2 podmoduły: 
 % TO DO: proszę stosować czcionkę maszynową do kodu, nazw plików itp. (zalecenie było w szablonie pracy!!!)
+% DONE: na przyszłość będę stosował odpowiednią czcionkę
 \begin {itemize}
     \item \texttt{Core.Auth} - zawiera serwisy odpowiedzialne za autoryzację i uwierzytelnianie użytkowników,
     \item \texttt{Core.Common} - zawiera używane w wielu miejscach wyjątki i klasy pomocnicze.
@@ -95,10 +104,9 @@ Głównym zadaniem tego modułu jest definiowanie oraz mapowanie obiektów na ta
 	\label{fig:architecture-diagram}
 \end{figure}
 
-
-% TO DO: tutaj powinien pojawić się model konceptualny, a nie fizycznmy. W produkcyjnym pisaniu kodu zanim zacznie się implementację trzeba rozpoznać co tak naprawdę będzie przetwarzane. Jednak często programiści, zwłaszcza ci, co korzystają z ORM, zaczynają od razu pisać klasy encji (bez głębszego refleksji po co i jak). Proszę się zastanowić, jak przeredagować poniższy tekst, by przyjął on formę "założeń", a nie "raportu z implementacji"
+% TO DO: tutaj powinien pojawić się model konceptualny, a nie fizyczny. W produkcyjnym pisaniu kodu zanim zacznie się implementację trzeba rozpoznać co tak naprawdę będzie przetwarzane. Jednak często programiści, zwłaszcza ci, co korzystają z ORM, zaczynają od razu pisać klasy encji (bez głębszego refleksji po co i jak). Proszę się zastanowić, jak przeredagować poniższy tekst, by przyjął on formę "założeń", a nie "raportu z implementacji"
+% DONE: wstawiłem model konceptualny (źródła kodu w folderze z diagramem)
 \subsection{Model danych}
-% Ze względu na charakter diagramu, czy nie lepsze będzie uwzględnienie go w rozdziale 3, w którym opisuję implementację?
 Aby zrealizować wymagane funkcje systemu, zaprojektowano bazę danych, której model fizyczny przedstawiono na rysunku \ref{fig:entity-relationship-diagram}.
 Składa się ona z 7 tabel, które przechowują informacje o użytkownikach, tokenach odświeżania, pojazdach, trasach i rezerwacjach.
 Same encje oraz ich relacje zostały zdefiniowane w module \texttt{Persistence} za pomocą ORM (ang.~\emph{Object-Relational Mapper}).
@@ -107,7 +115,7 @@ Dzięki mechanizmowi migracji, pozwala na automatyczne generowanie i aktualizowa
 % TO DO: rozumiem, że diagram zostanie przerysowany (nie wnikając w zawartość obecnego diagramu jest on za bardzo rozwleczony - marnowane jest za dużo przestrzeni)
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.8\linewidth]{rys02/Entity_relatioship_diagram.pdf}
+	\includegraphics[width=0.8\linewidth]{rys02/Conceptual_model.pdf}
 	\caption{Diagram relacji encji w bazie danych}
 	\label{fig:entity-relationship-diagram}
 \end{figure}
