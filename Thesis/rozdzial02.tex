@@ -1,24 +1,66 @@
 \chapter{Analiza wymagań i projekt systemu}
 \section{Przegląd istniejących rozwiązań}
 Aplikacje wymienione we wstępie poddano głębszej analizie. Pozwoliła ona zidentyfikować mocne i słabe strony aplikacji dała inspirację do sprecyzowania wymagań do własnego systemu. Poniżej przedstawiono wyniki tej analizy.
-
 \subsection{BlaBlaCar}
-BlaBlaCar to jedna z największych platform do organizowania wspólnych przejazdów na świecie. 
+\textbf{BlaBlaCar} to jedna z największych platform do organizowania wspólnych przejazdów na świecie. 
 Pozwala ona użytkownikom na oferowanie i wyszukiwanie przejazdów, a także ocenianie kierowców i pasażerów. 
 Charakteryzuje się intuicyjnym interfejsem użytkownika oraz szeroką bazą użytkowników, co zwiększa szanse na znalezienie odpowiedniego przejazdu. 
 Ma ona również swoje wady, jak pobierane opłat za korzystanie z usług oraz ograniczą dostępność w niektórych regionach (np.\ w Stanach Zjednoczonych). Ponadto, do wyników wyszukiwania przejazdów dodawane są oferty komunikacji zbiorowej,
 takie jak autobusy czy pociągi. Może to wpłynąć na łatwość znalezienia przejazdu samochodem, który może być głównym celem użytkownika.
+Przykładowe ekrany aplikacji inOneCar przedstawiono na rysunku~\ref{fig:blablacar-screens}.
 % TO DO: aby "upiększyć" pracę może Pan zamieścić zrzuty z ekranów opisywanych aplikacji (prawo cytatu pozwala takie zrzuty zrobić)
-\subsection{InOneCar}
-InOneCar to polska aplikacja do organizacji wspólnych przejazdów, głównie na Dolnym Śląsku.
+% DONE: Dodałem zrzuty ekranów, pokombinowałem ze skalowaniem obrazów i na razie się mniej więcej dobrze mieści
+\begin{figure}[htb]
+  \centering
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/BlaBlaCar2.png}
+
+    (a) Ekran główny
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/BlaBlaCar1.png}
+
+    (b) Wybór wariantu przejazdu i opłata serwisowa
+  \end{minipage}
+  \caption{Ekrany aplikacji BlaBlaCar. Źródło: opracowanie własne \cite{BlaBlaCarApp}.}
+  \label{fig:blablacar-screens}
+\end{figure}
+\newpage
+\subsection{inOneCar}
+\textbf{inOneCar} to polska aplikacja do organizacji wspólnych przejazdów, głównie na Dolnym Śląsku.
 Podobnie jak BlaBlaCar, umożliwia użytkownikom oferowanie i wyszukiwanie przejazdów, obliczanie kosztów i zarządzanie rezerwacjami na przejazdy. 
 Jednakże, w przeciwieństwie do BlaBlaCar, InOneCar nie pobiera opłat za korzystanie z usług.
 Problemem tej platformy jest brak swobody w oferowaniu przejazdów. Kierowcy mogą oferować przejazdy wyłącznie na trasach, które zostały wcześniej zdefiniowane
 przez administratorów systemu. Jak wspomniano we wstępie, kryterium stworzenia ,,korytarza'' jest wystarczająca liczba zgłoszeń kierowców i pasażerów na danej trasie. 
 W przypadku braku wystarczającej liczby zgłoszeń, kierowcy nie mogą oferować przejazdów na tej trasie. Zdecydowanie ogranicza to swobodę kierowców w oferowaniu przejazdów
 na mało popularnych trasach, co pogarsza sytuację wykluczenia komunikacyjnego w mniejszych miejscowościach.
+Przykładowe ekrany aplikacji inOneCar przedstawiono na rysunku~\ref{fig:inonecar-screens}.
+\begin{figure}[htb]
+  \centering
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/InOneCar1.png}
 
+    (a) Lista nadchodzących przejazdów
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/InOneCar2.png}
+
+    (b) Komunikat o niedostępności usługi na danym obszarze
+  \end{minipage}
+  \caption{Ekrany aplikacji inOneCar. Źródło: opracowanie \cite{InOneCarApp}.}
+  \label{fig:inonecar-screens}
+\end{figure}
+
+\newpage
 \section{Analiza wymagań funkcjonalnych i niefunkcjonalnych}
+Aby określić funkcjonalności, jakie powinien oferować projektowany system, w pierwszej kolejności zdefiniowano jego wymagania funkcjonalne i niefunkcjonalne. 
+Na ich podstawie opracowano diagram wymagań.
 \subsection{Wymagania funkcjonalne}
 Aplikacja powinna umożliwiać użytkownikom oferowanie i wyszukiwanie przejazdów oraz zarządzanie rezerwacjami na przejazdy. Użytkownicy korzystający z aplikacji mogą wystąpić w niej w dwóch rolach: kierowcy oraz pasażera. 
 
@@ -72,6 +114,8 @@ Diagram wymagań systemu jest jedynie poglądowym zestawem funkcji oferowanymi p
     \item Aplikacja internetowa ma być dostępna poprzez najpopularniejsze dostępne przeglądarki internetowe (np.\ Chrome, Firefox).
 \end{enumerate}
 
+\section{Struktura i organizacja aplikacji}
+Bazując na powyższych wymaganiach funkcjonalnych oraz niefunkcjonalnych, zaprojektowano architekturę systemu, koncepcyjny model bazy danych oraz makiety interfejsu graficznego.
 \subsection{Architektura i projekt systemu}
 System zaprojektowano w oparciu o architekturę klient-serwer, w której aplikacja internetowa pełni rolę klienta HTTP, a serwer obsługuje logikę biznesową i przechowuje dane w bazie danych.
 Sam serwer został podzielony na kilka modułów, z których każdy odpowiada za określoną funkcjonalność systemu.
@@ -113,9 +157,13 @@ Same encje oraz ich relacje zostały zdefiniowane w module \texttt{Persistence} 
 Dzięki mechanizmowi migracji, pozwala na automatyczne generowanie i aktualizowanie struktury tabel w bazie danych bezpośrednio na podstawie kodu źródłowego.
 % Tutaj będę miał pytanie na konsultacjach co do tabel generowanych automatycznie przez framework, których na razie nie ma w diagramie.
 % TO DO: rozumiem, że diagram zostanie przerysowany (nie wnikając w zawartość obecnego diagramu jest on za bardzo rozwleczony - marnowane jest za dużo przestrzeni)
+% DONE: Przerysowałem diagram
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{rys02/Conceptual_model.pdf}
 	\caption{Diagram relacji encji w bazie danych}
 	\label{fig:entity-relationship-diagram}
 \end{figure}
+
+\subsection{Makiety interfejsu graficznego}
+% TODO: do narysowania na tablecie
