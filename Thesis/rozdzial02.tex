@@ -166,4 +166,103 @@ Dzięki mechanizmowi migracji, pozwala na automatyczne generowanie i aktualizowa
 \end{figure}
 
 \subsection{Makiety interfejsu graficznego}
-% TODO: do narysowania na tablecie
+Zaprojektowano interfejs systemu w formie makiet widoków narysowanych na tablecie graficznym.
+Główne widoki interfejsu przedstawiono na rysunkach \ref{fig:start-view}, \ref{fig:driver-view} oraz \ref{fig:passenger-view}.
+Reszta widoków nachodzi na główne widoki i jest dostępna w kontekście odpowiednich funkcji systemu, np.\ po kliknięciu ikony rezerwacji.
+Niezalogowany użytkownik trafia na widok ekranu startowego \ref{fig:start-view}, skąd może przejść do rejestracji lub logowania \ref{fig:register-login-views}.
+Widok rejestracji zawiera pola do wprowadzenia numeru telefonu, adresu e-mail oraz hasła. 
+Ponadto, użytkownik musi wybrać odpowiednią rolę w systemie, kierowcę lub pasażera.
+Widok logowania pokazuje jedynie pola do wprowadzenia danych uwierzytelniających oraz przycisk logowania.
+Po zalogowaniu, w zależności od roli użytkownika, jest on przekierowywany do odpowiedniego widoku interfejsu.
+Widok interfejsu pasażera przedstawiono na rysunku \ref{fig:passenger-view}, natomiast widok interfejsu kierowcy na rysunku \ref{fig:driver-view}.
+Widok pasażera może wyświetlić dwa pomniejsze widoki, ukazane na rysunku \ref{fig:passenger-mini-views}. 
+Pierwszy z nich wyświetla złożone rezerwacje, ich statusy, dane kierowcy oraz pozostałe ważne informacje, takie jak miejsce i czas odjazdu, pozwala on również na odwołanie rezerwacji.
+Drugi służy do złożenia rezerwacji lub odrzucenia znalezionej trasy.
+W przypadku widoku kierowcy \ref{fig:driver-view}, może on pokazać 3 pomniejsze widoki, ukazane na rysunku \ref{fig:driver-mini-views}.
+Pierwszy pozwala na edycję oraz obejrzenie informacji o samochodzie. Drugi pozwala na zarządzanie trasami, w tym wyznaczenie jak najlepszej trasy.
+Trzeci jest podobny do widoku rezerwacji pasażera, jednak w przypadku kierowcy, może on potwierdzić rezerwacje lub je odrzucić.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{rys02/Widok_startowy.png}
+	\caption{Widok ekranu startowego}
+	\label{fig:start-view}
+\end{figure}
+
+
+\begin{figure}[htb]
+  \centering
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_rejestracji.png}
+
+    (a) Widok rejestracji
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_logowania.png}
+
+    (b) Widok logowania
+  \end{minipage}
+  \caption{Widoki rejestracji i logowania.}
+  \label{fig:register-login-views}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{rys02/Widok_pasazera.png}
+	\caption{Widok interfejsu pasażera}
+	\label{fig:passenger-view}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_rezerwacji_pasazer.png}
+
+    (a) Widok rezerwacji pasażera
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_znalezionej_trasy.png}
+
+    (b) Widok znalezionej trasy
+  \end{minipage}
+  \caption{Pomniejsze widoki pasażera.}
+  \label{fig:passenger-mini-views}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{rys02/Widok_kierowcy.png}
+	\caption{Widok interfejsu kierowcy}
+	\label{fig:driver-view}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \begin{minipage}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_auta.png}
+
+    (a) Widok danych samochodu
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_tras.png}
+
+    (b) Widok tras kierowcy
+  \end{minipage}
+    \hfill
+  \begin{minipage}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_rezerwacji.png}
+
+    (c) Widok rezerwacji kierowcy
+  \end{minipage}
+  \caption{Pomniejsze widoki interfejsu kierowcy.}
+  \label{fig:driver-mini-views}
+\end{figure}
