@@ -22,6 +22,7 @@ Jest to popularny, otwartoźródłowy system, który po zainstalowaniu rozszerze
 Sam system został skonteneryzowany przy użyciu \texttt{Docker}, co umożliwia łatwe uruchamianie oraz zarządzanie wszystkimi komponentami aplikacji w izolowanych kontenerach.
 
 Wymienione oraz pozostałe najważniejsze narzędzia wraz z ich wersjami opisano w tabelach \ref{tab:narzedzia-front}, \ref{tab:narzedzia-back} oraz \ref{tab:narzedzia-db}.
+% Czy mam do wszystkich narzędzi dodać źródła w bibliografii?
 \begin{table}[htb]
 \small
 \centering
@@ -71,6 +72,7 @@ Narzędzie & Wersja & Opis \\ \hline\hline
 \texttt{PostGIS} & \texttt{3.6} & Rozszerzenie PostgreSQL umożliwiające przechowywanie i przetwarzanie danych przestrzennych.  \\ \hline
 \texttt{pgRouting} & \texttt{4.0.1} & Rozszerzenie PostgreSQL/PostGIS udostępniające funkcje i algorytmy wykorzystywane do doboru tras.  \\ \hline
 \texttt{osm2po} & \texttt{5.5.14} & Narzędzie przetwarzające dane OpenStreetMap i przygotowujące graf drogowy do wykorzystania w obliczeniach tras.  \\ \hline
+\texttt{GEOFABRIK} & \texttt{5.5.14} & Źródło danych drogowych pochodzących z OpenStreetMap.  \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -187,7 +189,8 @@ Mediator następnie przekazuje komendę do odpowiedniego handlera posiadającego
 	\label{fig:mediator_sequence}
 \end{figure}
 \section{Opis algorytmu doboru pasażerów do kierowców}
-
+Głównym zamysłem algorytmu jest znalezienie takiej trasy kierowcy, przy której pasażer musi przejść pieszo jak najkrótszy dystans od punktu wyszukiwania do punktu odjazdu, jak i od punktu przyjazdu do punktu docelowego.
+W obecnej wersji nie ma przewidzianego mechanizmu uwzględniającego wysadzenie lub zabranie pasażera w trakcie trasy. Zakłada się, że pasażer dołącza do przejazdu wyłącznie na początku trasy i opuszcza ją dopiero w punkcie docelowym.
 \subsection{Przebieg algorytmu}
 \begin{enumerate}
     \item Odfiltrowanie dostępnych tras na podstawie następujących kryteriów:
@@ -209,3 +212,78 @@ Mediator następnie przekazuje komendę do odpowiedniego handlera posiadającego
     \item Pobranie pełnych danych wybranej trasy z bazy danych i zwrócenie jej w postaci obiektu \texttt{RouteDto} lub \texttt{null} w przypadku braku odpowiedniej trasy.
 \end{enumerate}
 \subsection{Implementacja algorytmu}
+Klasa \texttt{RouteMatchingService} implementuje algorytm dopasowywania pasażerów do kierowców zgodnie z opisanym powyżej przebiegiem.
+Wywołanie algorytmu odbywa się poprzez wywołanie metody \texttt{MatchRoute}, która przyjmuje za argument zapytanie w postaci obiektu \texttt{GetMatchedRouteQuery}.
+Serwis ten zawiera ważną deklarację statycznego obiektu \texttt{GeometryFactory}, który jest parametryzowany kodem SRID=4326 (ang.~\emph{Spatial Reference System Identifier}) odpowiadającym układowi współrzędnych WGS84 \cite{IAG_WGS84_2025}.
+\texttt{GeometryFactory} jest wykorzystywany do tworzenia punktów pasażera ze współrzędnych z zapytania \ref{list:matchPrep}. 
+Wynika to z faktu, iż klasa \texttt{Point} z biblioteki \texttt{NetTopologySuite} nie mówi, w jakim układzie są przechowywane współrzędne, dlatego konieczne jest określenie SRID przy tworzeniu punktów.
+\begin{lstlisting}[label=list:matchPrep,caption=Przygotowanie serwisu RouteMatchingService,style=sharpcstyle]
+public class RouteMatchingService : IRouteMatchingService
+{
+    private static readonly GeometryFactory Wgs84 =
+        NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+
+    [...]
+
+    public async Task<RouteDto?> MatchRoute(GetMatchedRouteQuery query, CancellationToken ct)
+    {
+        var start = Wgs84.CreatePoint(new Coordinate(query.Start.X, query.Start.Y));
+        var end = Wgs84.CreatePoint(new Coordinate(query.End.X, query.End.Y));
+        [...]
+
+\end{lstlisting}
+
+Pierwszą częścią algorytmu jest wstępne odfiltrowanie tras kierowców za pomocą kwerendy \texttt{LINQ}, która wybiera tylko te trasy, które spełniają określone kryteria.
+Użyta jest metoda \texttt{AsNoTracking}, która informuje \texttt{EF Core}, żeby nie śledził zmian w pobranych obiektach, co poprawia wydajność zapytania.
+Jeżeli po wstępnym odfiltrowaniu nie będzie trasy spełniającej kryteria metoda zwraca \texttt{null}.
+\begin{lstlisting}[label=list:linqFilter,caption=Wstępne odfiltrowanie tras kierowców,style=sharpcstyle]
+        var candidateIds = await _dbContext.Routes
+            .AsNoTracking()
+            .Where(r => r.DepartureTime > now)
+            .Where(r => r.ArrivalTime < query.ArrivalTime)
+            .Where(r => EF.Functions.IsWithinDistance(r.Start, start, query.SearchRadiusMeters, true))
+            .Where(r => EF.Functions.IsWithinDistance(r.End, end, query.SearchRadiusMeters, true))
+            .Where(r => _dbContext.Cars.Any(car =>
+                car.DriverId == r.DriverId &&
+                car.Seats > _dbContext.Reservations.Count(x =>
+                    x.RouteId == r.Id && x.Status == ReservationStatus.Accepted)))
+            .OrderBy(r => EF.Functions.Distance(r.Start, start, true)
+                          + EF.Functions.Distance(r.End, end, true))
+            .Select(r => r.Id)
+            .ToArrayAsync(ct);
+
+        if (candidateIds.Length == 0)
+        {
+            return null;
+        }
+\end{lstlisting}
+
+Następna część algorytmu jest zaimplementowana w języku SQL ze względu na to, że operacji przestrzennych, np.\ \texttt{pgr\_dijkstraCost} nie da się wywołać z poziomu kodu \texttt{C\#}.
+Zaczyna się ona od uruchomienia zapytania i zdefiniowania docelowego formatu wynikowego w postaci klasy \texttt{RouteDistance}, zawierającej GUID trasy oraz obliczoną odległość.
+\begin{lstlisting}[label=list:sqlStart,caption=Uruchomienie zapytania SQL,style=sharpcstyle]
+    var best = await _dbContext.Database
+            .SqlQuery<RouteDistance>($"""
+            [...]
+\end{lstlisting}
+Zapytanie SQL \ref{list:sqlClosestNodes} zaczyna się od zbudowania wierzchołków grafu na podstawie tabeli \texttt{ds\_2po\_4pgr}. 
+Są z niej pobierane węzły \texttt{source} i \texttt{target} oraz ich współrzędne. Punkty są oznaczone jako WGS84. UNION łączy i usuwa powtórzenia.
+Pasażer w interfejsie użytkownika może wybrać miejsce niebędące węzłem grafu.Tworzona jest więc para węzłów \texttt{q} najbliższych pasażerowi. 
+Dwa podzapytania wybierają węzły najbliższe punktowi początkowemu i końcowemu pasażera.
+\begin{lstlisting}[label=list:sqlClosestNodes,caption=Wybór węzłów najbliższych pasażerowi,style=sqlstyle]
+        WITH vertices AS (
+        SELECT source AS id, ST_SetSRID(ST_MakePoint(x1, y1), 4326) AS geom
+        FROM public.ds_2po_4pgr
+        UNION
+        SELECT target AS id, ST_SetSRID(ST_MakePoint(x2, y2), 4326) AS geom
+        FROM public.ds_2po_4pgr
+    ),
+    q AS (
+        SELECT
+            (SELECT id::bigint FROM vertices
+             ORDER BY geom <-> ST_SetSRID(ST_MakePoint({start.X}, {start.Y}), 4326)
+             LIMIT 1) AS start_vid,
+            (SELECT id::bigint FROM vertices
+             ORDER BY geom <-> ST_SetSRID(ST_MakePoint({end.X}, {end.Y}), 4326)
+             LIMIT 1) AS end_vid
+    ),
+\end{lstlisting}
