@@ -268,8 +268,9 @@ Zaczyna się ona od uruchomienia zapytania i zdefiniowania docelowego formatu wy
 Zapytanie SQL \ref{list:sqlClosestNodes} zaczyna się od zbudowania wierzchołków grafu na podstawie tabeli \texttt{ds\_2po\_4pgr}. 
 Są z niej pobierane węzły \texttt{source} i \texttt{target} oraz ich współrzędne. Punkty są oznaczone jako WGS84. UNION łączy i usuwa powtórzenia.
 Pasażer w interfejsie użytkownika może wybrać miejsce niebędące węzłem grafu.Tworzona jest więc para węzłów \texttt{q} najbliższych pasażerowi. 
-Dwa podzapytania wybierają węzły najbliższe punktowi początkowemu i końcowemu pasażera.
-\begin{lstlisting}[label=list:sqlClosestNodes,caption=Wybór węzłów najbliższych pasażerowi,style=sqlstyle]
+Dwa podzapytania wybierają węzły najbliższe punktowi początkowemu i końcowemu pasażera. 
+Operator \texttt{<->}, pochodzący z rozszerzenia \texttt{PostGIS}, służy do obliczania odległości między geometriami w przestrzeni 2D.
+\begin{lstlisting}[label=list:sqlClosestNodes,caption=Wybór węzłów najbliższych punktom pasażera,style=sqlstyle]
         WITH vertices AS (
         SELECT source AS id, ST_SetSRID(ST_MakePoint(x1, y1), 4326) AS geom
         FROM public.ds_2po_4pgr
@@ -286,4 +287,96 @@ Dwa podzapytania wybierają węzły najbliższe punktowi początkowemu i końcow
              ORDER BY geom <-> ST_SetSRID(ST_MakePoint({end.X}, {end.Y}), 4326)
              LIMIT 1) AS end_vid
     ),
+\end{lstlisting}
+Podobnie jak w poprzednim zapytaniu, tutaj również należy wybrać węzły najbliższe punktom startowym i końcowym tras kandydujących.
+Z racji na to, iż tras kandydujących jest wiele, wymagane było użycie \texttt{CROSS JOIN LATERAL}, które wykonuje zapytanie dla każdego wiersza tabeli z danymi trasy.
+\begin{lstlisting}[label=list:sqlClosestRouteNodes,caption=Wybór węzłów najbliższych punktom tras,style=sqlstyle]
+    candidates AS (
+        SELECT route."Id" AS route_id,
+                route_start.id::bigint AS route_start_vid,
+                route_end.id::bigint AS route_end_vid
+        FROM "Routes" route
+            CROSS JOIN LATERAL (
+                SELECT id FROM vertices
+                ORDER BY geom <-> ST_SetSRID(route."Start", 4326)
+                LIMIT 1) route_start
+            CROSS JOIN LATERAL (
+                SELECT id FROM vertices
+                ORDER BY geom <-> ST_SetSRID(route."End", 4326)
+                LIMIT 1) route_end
+        WHERE route."Id" = ANY({candidateIds})
+    ),
+\end{lstlisting}
+W kawałku kodu przedstawionego na listingu \ref{list:sqlDistCalc} realizowany jest krok 5.\ algorytmu, czyli obliczana jest odległość rzeczywistej drogi dojazdu w sieci drogowej przy użyciu algorytmu Dijkstry.
+Drogi traktowane są jako graf nieskierowany (zachowanie określone przez ostatni parametr funkcji \texttt{pgr\_dijkstraCost} - \texttt{directed := false})
+ze względu na to, iż pieszych nie obowiązują kierunki ruchu drogowego, mają jedynie trzymać się prawej strony drogi.
+W przypadku, gdy początek trasy jest tym samym węzłem, co punkt startowy pasażera, przypisywany jest koszt 0, obsługuje to fragment kodu z użyciem operatora \texttt{UNION ALL}.
+\begin{lstlisting}[label=list:sqlDistCalc,caption=Obliczenie odległości między punktami,style=sqlstyle]
+    leg1 AS (
+        SELECT end_vid, agg_cost
+        FROM pgr_dijkstraCost(
+            'SELECT id, source, target, cost, reverse_cost FROM public.ds_2po_4pgr',
+            (SELECT start_vid FROM q),
+            (SELECT array_agg(DISTINCT route_start_vid) FROM candidates
+            WHERE route_start_vid <> (SELECT start_vid FROM q)),
+            directed := false)
+        UNION ALL
+        SELECT start_vid, 0::double precision
+        FROM q
+        WHERE EXISTS (
+            SELECT 1 FROM candidates
+            WHERE route_start_vid = q.start_vid)
+    ),
+    leg2 AS (
+        SELECT start_vid, agg_cost
+        FROM pgr_dijkstraCost(
+            'SELECT id, source, target, cost, reverse_cost FROM public.ds_2po_4pgr',
+            (SELECT array_agg(DISTINCT route_end_vid) FROM candidates
+            WHERE route_end_vid <> (SELECT end_vid FROM q)),
+            (SELECT end_vid FROM q),
+            directed := false)
+        UNION ALL
+        SELECT end_vid, 0::double precision
+        FROM q
+        WHERE EXISTS (
+            SELECT 1 FROM candidates
+            WHERE route_end_vid = q.end_vid)
+    )
+\end{lstlisting}
+Końcowe zapytanie \texttt{SELECT} sumuje koszty obu odcinków trasy, sortuje wyniki rosnąco, a \texttt{LIMIT 1} zostawia trasę o najmniejszym koszcie.
+\begin{lstlisting}[label=list:sqlFinish,caption=Zsumowanie kosztów i wybór najlepszej trasy,style=sqlstyle]
+        SELECT
+            c.route_id AS "RouteId",
+            l1.agg_cost + l2.agg_cost AS "TotalDistance"
+        FROM candidates c
+            JOIN leg1 l1 ON l1.end_vid = c.route_start_vid
+            JOIN leg2 l2 ON l2.start_vid = c.route_end_vid
+        ORDER BY "TotalDistance"
+        LIMIT 1
+        """)
+\end{lstlisting}
+\texttt{FirstOrDefaultAsync(ct)} zwraca wynik jako \texttt{RouteDistance} lub \texttt{null}, jeśli nie znaleziono odpowiedniej trasy.
+% też podkreśla ale jest takie słowo https://sjp.pl/zmapowa%C4%87
+Jeśli zwrócono ID trasy, następuje zmapowanie danych trasy z bazy danych na obiekt \texttt{RouteDto}.
+\begin{lstlisting}[label=list:mapResultToRouteDto,caption=Mapowanie wyniku zapytania na obiekt RouteDto,style=sharpcstyle]
+        .FirstOrDefaultAsync(ct);
+
+    if (best is null)
+    {
+        return null;
+    }
+
+    return await _dbContext.Routes
+        .AsNoTracking()
+        .Where(r => r.Id == best.RouteId)
+        .Select(r => new RouteDto
+        {
+            Id = r.Id,
+            [...]
+            ArrivalTime = r.ArrivalTime
+        })
+        .FirstOrDefaultAsync(ct);
+}
+
+private sealed record RouteDistance(Guid RouteId, double TotalDistance);
 \end{lstlisting}
