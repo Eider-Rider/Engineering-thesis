@@ -259,7 +259,7 @@ Jeżeli po wstępnym odfiltrowaniu nie będzie trasy spełniającej kryteria met
 \end{lstlisting}
 
 Następna część algorytmu jest zaimplementowana w języku SQL ze względu na to, że operacji przestrzennych, np.\ \texttt{pgr\_dijkstraCost} nie da się wywołać z poziomu kodu \texttt{C\#}.
-Zaczyna się ona od uruchomienia zapytania i zdefiniowania docelowego formatu wynikowego w postaci klasy \texttt{RouteDistance}, zawierającej GUID trasy oraz obliczoną odległość.
+Zaczyna się ona od uruchomienia zapytania i zdefiniowania docelowego formatu wynikowego w postaci klasy \texttt{RouteDistance}, zawierającej Guid trasy oraz obliczoną odległość.
 \begin{lstlisting}[label=list:sqlStart,caption=Uruchomienie zapytania SQL,style=sharpcstyle]
     var best = await _dbContext.Database
             .SqlQuery<RouteDistance>($"""
