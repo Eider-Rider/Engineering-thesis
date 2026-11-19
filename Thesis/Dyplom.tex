@@ -397,6 +397,33 @@ commentstyle=\color{green},
     xleftmargin=5pt,
     xrightmargin=5pt
 }
+\lstdefinestyle{overpassstyle}{
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  tabsize=2,
+  extendedchars=true,
+  breaklines=true,
+  showspaces=false,
+  showtabs=true,
+  xleftmargin=17pt,
+  framexleftmargin=17pt,
+  framexrightmargin=5pt,
+  framexbottommargin=4pt,
+  keywordstyle=\color{blue},
+  commentstyle=\color{green},
+  stringstyle=\color{red},
+  morekeywords={out, csv, body, area, node, way, relation, true, false, timeout},
+  morestring=[b]",
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  literate=
+    {ą}{{\k{a}}}1 {ć}{{\'{c}}}1 {ę}{{\k{e}}}1 {ł}{{\l{}}}1
+    {ń}{{\'{n}}}1 {ó}{{\'{o}}}1 {ś}{{\'{s}}}1 {ź}{{\'{z}}}1 {ż}{{\.{z}}}1
+    {Ą}{{\k{A}}}1 {Ć}{{\'{C}}}1 {Ę}{{\k{E}}}1 {Ł}{{\L{}}}1
+    {Ń}{{\'{N}}}1 {Ó}{{\'{O}}}1 {Ś}{{\'{S}}}1 {Ź}{{\'{Z}}}1 {Ż}{{\.{Z}}}1
+}
 
 
 
