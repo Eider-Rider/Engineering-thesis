@@ -1,6 +1,7 @@
 \chapter{Szczegóły implementacji}
 \section{Serwer i baza danych}
-Zgodnie z diagramem architektury systemu, serwer składa się z kilku modułów.
+Zgodnie z diagramem architektury systemu, serwer składa się z kilku modułów. 
+Finalnie można określić jego strukturę jako monolit z wydzielonymi warstwami interfejsu HTTP, logiki biznesowej, obsługi uwierzytelniania i autoryzacji oraz dostępu do bazy danych.
 Klient ma o wiele prostszą budowę, składa się głównie z warstwy interfejsu użytkownika, logiki odpowiedzialnej za komunikację z REST API oraz obsługi JWT.
 \subsection{REST API}
 API jest podzielone na 2 główne foldery: \texttt{Controllers} oraz \texttt{Requests}. 
@@ -120,8 +121,116 @@ Typ & Ścieżka & Opis \\ \hline\hline
 \end{table}
 
 \subsection{Warstwa logiki biznesowej}
+Klasy realizujące logikę biznesową znajdują się w folderach dzielących je ze względu na domenę, komendy i zapytania.
+Dodatkowo, w zależności od implementowanych funkcji, znajdują się również foldery zawierające serwisy oraz wyniki zapytań.
+Strukturę projektu \texttt{Eider-Rider.Core} przedstawiono na listingu \ref{list:coreStructure}.
+\begin{lstlisting}[label=list:coreStructure,caption=Struktura projektu logiki biznesowej,style=folderview]
+Eider-Rider.Core
+|-- Cars
+|   |-- Commands
+|   |   |-- CreateCarCommand.cs
+|   |   \-- UpdateCarCommand.cs
+|   |-- Queries
+|   |   |-- GetCarByRouteIdQuery.cs
+|   |   \-- GetCarByUserIdQuery.cs
+|   \-- Results
+|       \-- CarDto.cs
+|-- Reservations
+|   |-- Commands
+|   |   |-- CreateReservationCommand.cs
+|   |   |-- DeleteReservationByIdCommand.cs
+|   |   \-- UpdateReservationCommand.cs
+|   |-- Queries
+|   |   |-- GetReservationsByRouteIdQuery.cs
+|   |   \-- GetReservationsByUserIdQuery.cs
+|   \-- Results
+|       \-- ReservationDto.cs
+|-- Routes
+|   |-- Abstractions
+|   |   \-- IRouteMatchingService.cs
+|   |-- Commands
+|   |   |-- CreateRouteCommand.cs
+|   |   \-- DeleteRouteByIdCommand.cs
+|   |-- Queries
+|   |   |-- GetAllRoutesByUserIdQuery.cs
+|   |   |-- GetMatchedRouteQuery.cs
+|   |   \-- GetRoutePathQuery.cs
+|   |-- Results
+|   |   \-- RouteDto.cs
+|   \-- Services
+|       |-- RouteCalculator.cs
+|       \-- RouteMatchingService.cs
+|-- ServiceExtensions.cs
+\-- Users
+    |-- Commands
+    |   |-- Abstractions
+    |   |-- LoginCommand.cs
+    |   |-- RefreshTokenCommand.cs
+    |   \-- RegisterCommand.cs
+    |-- Queries
+    |   \-- GetUserByIdQuery.cs
+    \-- Results
+        |-- TokenDto.cs
+        \-- UserDto.cs
+\end{lstlisting}
+Serwis \texttt{RouteMatchingService} realizująca algorytm dopasowywania tras pasażerów do tras kierowców jest zarejestrowana w kontenerze DI aplikacji jako \texttt{Scoped}.
+Oznacza to, że instancja serwisu jest tworzona raz na żądanie HTTP i współdzielona w ramach tego żądania.
 \subsection{Warstwa uwierzytelniania i autoryzacji}
+Obsługa tokenów JWT oraz odświeżających, podobnie jak ich weryfikacja, realizowana jest za pomocą serwisów \texttt{TokenService} oraz \texttt{RefreshTokenService}.
+Struktura projektu \texttt{Eider-Rider.Core.Auth} przedstawiono na listingu \ref{list:authStructure}:
+\begin{lstlisting}[label=list:authStructure,caption=Struktura projektu uwierzytelniania,style=folderview]
+Eider-Rider.Core.Auth
+|-- Interfaces
+|   |-- IRefreshTokenService.cs
+|   \-- ITokenService.cs
+|-- ServiceExtensions.cs
+|-- Services
+|   |-- RefreshTokenService.cs
+|   \-- TokenService.cs
+\-- Settings
+    \-- JwtSettings.cs
+\end{lstlisting}
+Token JWT jest podpisywany i weryfikowany z użyciem klucza symetrycznego oraz algorytmu HMAC-SHA256.
+Podobnie jak serwis \texttt{RouteMatchingService}, serwisy \texttt{TokenService} oraz \texttt{RefreshTokenService} są rejestrowane w kontenerze DI aplikacji jako \texttt{Scoped}.
 \subsection{Warstwa dostępu do bazy danych}
+Folder \texttt{}
+Plik \texttt{AdminConsts.cs} zawiera stałe związane z kontem administratora aplikacji, natomiast plik \texttt{UserConsts.cs} zawiera hasło do konta użytkownika wygenerowanego automatycznie.
+Struktura projektu \texttt{Eider-Rider.Persistence} została przedstawiona na listingu \ref{list:persistenceStructure}.
+\begin{lstlisting}[label=list:persistenceStructure,caption=Struktura projektu dostępu do bazy danych,style=folderview]
+Eider-Rider.Persistence
+|-- Domain
+|   |-- Cars
+|   |   \-- CarEntity.cs
+|   |-- EntityBase.cs
+|   |-- Reservations
+|   |   \-- ReservationEntity.cs
+|   |-- Routes
+|   |   \-- RouteEntity.cs
+|   \-- Users
+|       |-- RefreshTokenEntity.cs
+|       |-- RoleEntity.cs
+|       \-- UserEntity.cs
+|-- EiderRiderDbContext.cs
+|-- Enums
+|   |-- PolicyNames.cs
+|   |-- ReservationStatus.cs
+|   \-- RoleNames.cs
+|-- Interceptors
+|   \-- EntityBaseInterceptor.cs|-- Seeding
+|   |-- AppSeeder.cs
+|   |-- Consts
+|   |   |-- UserConsts.cs
+|   |   \-- AdminConsts.cs
+|   |-- Domain
+|   |   |-- CarSeeder.cs
+|   |   |-- RoleSeeder.cs
+|   |   |-- RouteSeeder.cs
+|   |   \-- UserSeeder.cs
+|   \-- Locations
+|       |-- LocationImporter.cs
+|       \-- LocationModel.cs
+\end{lstlisting}
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\linewidth]{rys04/CLASS_ER-v2.drawio.pdf}
