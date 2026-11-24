@@ -424,7 +424,15 @@ commentstyle=\color{green},
     {Ą}{{\k{A}}}1 {Ć}{{\'{C}}}1 {Ę}{{\k{E}}}1 {Ł}{{\L{}}}1
     {Ń}{{\'{N}}}1 {Ó}{{\'{O}}}1 {Ś}{{\'{S}}}1 {Ź}{{\'{Z}}}1 {Ż}{{\.{Z}}}1
 }
-
+\lstdefinelanguage{HTML}{
+    sensitive=true,
+    morecomment=[s]{<!--}{-->},
+    morestring=[b]",
+    morekeywords={
+        html, head, body, title, meta, h1, h2, h3, p, a, div, span,
+        ul, ol, li, form, input, button, script, style
+    }
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

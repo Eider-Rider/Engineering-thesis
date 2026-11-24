@@ -181,12 +181,34 @@ Eider-Rider.Core
 
 Serwis \texttt{RouteMatchingService} realizująca algorytm dopasowywania tras pasażerów do tras kierowców jest zarejestrowana w kontenerze DI aplikacji jako \texttt{Scoped}.
 Oznacza to, że instancja serwisu jest tworzona raz na żądanie HTTP i współdzielona w ramach tego żądania.
-% ====================================
-% TODO: opisać Eider-Rider.Core.Common
-% ====================================
+\texttt{RouteCalculator} to klasa, która odpowiada za obliczenie trasy przy jej zapisywaniu do bazy danych. 
+Używa do tej gotowej implementacji algorytmu Dijkstry.
+Sama trasa jest przechowywana jako obiekt typu \texttt{LineString}, pochodzący z biblioteki \texttt{NetTopologySuite}.
+Wyodrębniono wyrzucane w trakcie działania aplikacji wyjątki oraz klasy pomocnicze w projekcie \texttt{Eider-Rider.Core.Common}.
+Do klas pomocniczych należy serwis \texttt{AuthorizedUserProvider}, który udostępnia informacje o aktualnie zalogowanym użytkowniku.
+Następnymi takimi klasami są \texttt{IEiderRiderOptions} oraz \texttt{OptionsExtensions}.
+Umożliwiają one odpowiednio określenie nazw sekcji konfiguracyjnych przez klasy ustawień oraz wiązanie tych sekcji z klasami i walidację ich wartości podczas uruchamiania aplikacji.
+Struktura projektu \texttt{Eider-Rider.Core.Common} przedstawiono na listingu \ref{list:authStructure}.
+\begin{lstlisting}[label=list:commonsStructure,caption=Struktura projektu wspólnych klas pomocniczych,style=folderview]
+Eider-Rider.Core.Common
+|-- Abstractions
+|   |-- IAuthorizedUserProvider.cs
+|   \-- IEiderRiderOptions.cs
+|-- Exceptions
+|   |-- EntityNotFoundException.cs
+|   |-- ExceptionBase.cs
+|   |-- InvalidTokenException.cs
+|   \-- RouteCalculationException.cs
+|-- Extensions
+|   \-- OptionsExtensions.cs
+|-- Internal
+|   \-- AuthorizedUserProvider.cs
+\-- ServiceExtensions.cs
+\end{lstlisting}
 \subsection{Warstwa uwierzytelniania i autoryzacji}
 Obsługa tokenów JWT oraz odświeżających, podobnie jak ich weryfikacja, realizowana jest za pomocą serwisów \texttt{TokenService} oraz \texttt{RefreshTokenService}.
-Struktura projektu \texttt{Eider-Rider.Core.Auth} przedstawiono na listingu \ref{list:authStructure}:
+Klasa \texttt{JwtSettings} zawiera ustawienia konfiguracyjne związane z tokenami JWT, takie jak klucz podpisu cyfrowego, czas ważności tokenu oraz inne parametry do generowania i weryfikacji tokenów.
+Struktura projektu \texttt{Eider-Rider.Core.Auth} przedstawiono na listingu \ref{list:authStructure}.
 
 \begin{lstlisting}[label=list:authStructure,caption=Struktura projektu uwierzytelniania,style=folderview]
 Eider-Rider.Core.Auth
@@ -209,14 +231,14 @@ Pliki \texttt{PolicyNames.cs}, \texttt{ReservationStatus.cs} oraz \texttt{RoleNa
 Klasa \texttt{EntityBase} stanowi bazę dla wszystkich encji (za wyjątkiem encji użytkownika) w projekcie. 
 Definiuje ona pola ułatwiające śledzenie czasu utworzenia i aktualizacji oraz użytkownika, który stworzył daną encję.
 Wypełnianie pól w encjach dziedziczących po klasie \texttt{EntityBase} odbywa się automatycznie za pomocą interceptora \texttt{EntityBaseInterceptor}.
-Przechwytuje on zapytania do bazy danych i w odpowiednich momentach uzupełnia pola śledzące w encjach.
+Przechwytuje on zapytania do bazy danych i uzupełnia pola śledzące w encjach.
 Folder \texttt{Seeding} zawiera klasy odpowiedzialne za wpisanie danych testowych do bazy danych.
-Dane testowe obejmują użytkowników, role, samochody oraz trasy.
+Dane testowe obejmują użytkowników, role w systemie, samochody trasy.
 Plik \texttt{AdminConsts.cs} zawiera stałe związane z kontem administratora aplikacji, natomiast plik \texttt{UserConsts.cs} zawiera hasło do konta użytkownika wygenerowanego automatycznie.
 W przypadku tras przygotowanie danych testowych obejmowało wczytanie punktów lokalizacyjnych z pliku \texttt{Locations.csv}, znajdującego się w folderze głównym projektu.
 Same dane lokalizacyjne były pobrane ze strony \url{www.overpass-turbo.eu} za pomocą zapytania Overpass API z listingu \ref{list:overpassQuery}:
 
-\begin{lstlisting}[label=list:overpassQuery,caption=Zapytanie Overpass API do pobrania danych lokalizacyjnych,style=overpassstyle]
+\begin{lstlisting}[label=list:overpassQuery,caption=Zapytanie Overpass API do pobrania danych lokalizacyjnyUżytkownik przy uruchomieniu aplikacji trafia na stronę głównąch,style=overpassstyle]
 [out:csv(::lat, ::lon, "addr:street", "addr:housenumber", "addr:postcode", "addr:city"; true; "; ")][timeout:25];
 
 (
@@ -273,7 +295,217 @@ Na podstawie zdefiniowanych encji w projekcie \texttt{Eider-Rider.Persistence} s
 	\caption{Diagram relacji klas encji}
 	\label{fig:entity-class-diagram}
 \end{figure}
+
+\newpage
+
 \section{Aplikacja internetowa}
-\subsection{Struktura aplikacji}
+Projekt z klientem cechuje się o wiele prostszą strukturą w porównaniu do serwera. Przedstawiono ją na listingu \ref{list:clientStructure}.
+\begin{lstlisting}[label=list:clientStructure,caption=Struktura projektu klienta,style=folderview]
+Eider-Rider.App/src
+|-- App.tsx
+|-- Auth
+|   |-- AuthContext.ts
+|   |-- AuthProvider.tsx
+|   |-- ProtectedRoute.tsx
+|   \-- useAuth.ts
+|-- Consts.ts
+|-- Helpers
+|   |-- ApiClient.ts
+|   |-- CarDetailsDialog.tsx
+|   |-- DriverReservationsDialog.tsx
+|   |-- DriverRoutesDialog.tsx
+|   |-- fuelCost.ts
+|   |-- Layout.tsx
+|   |-- reservationStatus.ts
+|   |-- RouteFuelCost.tsx
+|   \-- RoutesProvider.tsx
+\-- Pages
+    |-- DriverPage.tsx
+    |-- LandingPage.tsx
+    |-- LoginPage.tsx
+    |-- PassengerPage.tsx
+    \-- RegisterPage.tsx
+\end{lstlisting}
+W tabeli \ref{tab:pliki-frontend} wykazano najważniejsze pliki i ich funkcje w aplikacji internetowej.
+
+\begin{table}[htb]
+\small
+\centering
+\caption{Struktura aplikacji internetowej}
+\label{tab:pliki-frontend}
+\begin{tabularx}{\linewidth}{|l|X|} \hline
+Plik & Opis \\ \hline\hline
+\texttt{App.tsx}
+& Inicjalizuje aplikację React oraz konfiguruje motyw, uwierzytelnianie i przekierowania. \\ \hline
+\texttt{Consts.ts}
+& Przechowuje adres API oraz ścieżki wykorzystywanych punktów końcowych. \\ \hline
+\texttt{AuthContext.ts}
+& Definiuje kontekst i interfejs stanu uwierzytelnienia. \\ \hline
+\texttt{AuthProvider.tsx}
+& Zarządza stanem zalogowania oraz przechowywaniem tokenów. \\ \hline
+\texttt{ProtectedRoute.tsx}
+& Ogranicza dostęp do widoków na podstawie zalogowania i roli użytkownika. \\ \hline
+\texttt{useAuth.ts}
+& Udostępnia komponentom dostęp do kontekstu uwierzytelnienia. \\ \hline
+\texttt{ApiClient.ts}
+& Konfiguruje komunikację z API, dodawanie tokenu i jego odświeżanie. \\ \hline
+\texttt{CarDetailsDialog.tsx}
+& Umożliwia wyświetlanie i edycję danych pojazdu kierowcy. \\ \hline
+\texttt{DriverReservationsDialog.tsx}
+& Wyświetla rezerwacje tras kierowcy i umożliwia zmianę ich statusu. \\ \hline
+\texttt{DriverRoutesDialog.tsx}
+& Wyświetla trasy kierowcy oraz umożliwia podgląd i anulowanie trasy. \\ \hline
+\texttt{fuelCost.ts}
+& Oblicza koszt paliwa przypadający na jedną osobę. \\ \hline
+\texttt{Layout.tsx}
+& Definiuje wspólny układ strony, pasek nawigacyjny i widok rezerwacji pasażera. \\ \hline
+\texttt{reservationStatus.ts}
+& Definiuje statusy rezerwacji oraz ich nazwy wyświetlane użytkownikowi. \\ \hline
+\texttt{RouteFuelCost.tsx}
+& Udostępnia formularz szacowania kosztu paliwa dla wybranej trasy. \\ \hline
+\texttt{RoutesProvider.tsx}
+& Definiuje ścieżki aplikacji i przypisane do nich widoki. \\ \hline
+\texttt{DriverPage.tsx}
+& Umożliwia kierowcy utworzenie trasy z wykorzystaniem formularza i mapy. \\ \hline
+\texttt{LandingPage.tsx}
+& Wyświetla stronę główną z odnośnikami do logowania i rejestracji. \\ \hline
+\texttt{LoginPage.tsx}
+& Udostępnia formularz logowania i przekierowuje użytkownika po zalogowaniu. \\ \hline
+\texttt{PassengerPage.tsx}
+& Umożliwia pasażerowi wyszukanie przejazdu i utworzenie rezerwacji. \\ \hline
+\texttt{RegisterPage.tsx}
+& Udostępnia widok rejestracji kierowcy lub pasażera. \\ \hline
+\end{tabularx}
+\end{table}
+
 \subsection{Interfejs użytkownika}
+Makiety interfejsu użytkownika przedstawione na rysunkach opisanych w podsekcji \ref{subsec:ui-mockups} zostały w dużej mierze odzwierciedlone w rzeczywistości.
+Jedną z różnic jest to, że koszt trasy nie pokazuje się pasażerowi przy rezerwacji miejsca w samochodzie na przejazd. 
+Jest to dostępne z nowego panelu kierowcy, gdzie może on zobaczyć proponowaną przez system trasę. 
+W tym panelu znajduje się kalkulator kosztów przejazdu na osobę. 
+Funkcja ta została przeniesiona z dwóch powodów, pierwszym z nich jest to, że ceny paliwa mogą się różnić pomiędzy stacjami, a same koncerny paliwowe nie
+udostępniają publicznych API do pobierania aktualnych cen paliwa. 
+Drugim powodem jest to, że kierowca na danej trasie może mieć w samochodzie pasażera, który nie jest zarejestrowany w systemie, na przykład swojego kolegę z pracy lub członka rodziny.
+
+Strona początkowa przedstawiona na rysunku \ref{fig:impl_main_page} pokazuje jedynie przycisk logowania oraz rejestracji, znajdujące się pod nazwą aplikacji. 
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.5\linewidth]{rys04/Main_view.png}
+	\caption{Strona początkowa}
+	\label{fig:impl_main_page}
+\end{figure}
+
+Widok rejestracji wymaga od użytkownika jego nazwy, adresu e-mail, numeru telefonu oraz hasła. 
+Użytkownik podczas rejestracji ma również możliwość wyboru, czy chce zarejestrować się jako kierowca, czy jako pasażer.
+Pokazano to na rysunku \ref{fig:impl_register_login}.
+\begin{figure}[htb]
+  \centering
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \vtop{\vskip-2ex\hbox{{\includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys04/Register_view.png}}}}
+    (a) Widok rejestracji
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \vtop{\vskip-2ex\hbox{{\includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys04/Login_view.png}}}}
+    (b) Widok logowania
+  \end{minipage}
+  \caption{Widoki rejestracji i logowania.}
+  \label{fig:impl_register_login}
+\end{figure}
+
+Po zalogowaniu jako pasażer, pokazywana jest strona składająca się z mapy oraz panelu bocznego umożliwiającego doprecyzowanie kryteriów wyszukiwania tras jak na rysunku \ref{fig:impl_passenger_main_page}.
+W przypadku znalezienia odpowiedniej trasy, wyświetlana jest informacja o niej, a na mapie pojawia się linia prosta łącząca punkt początkowy z punktem końcowym trasy. pokazano to na rysunku \ref{fig:impl_passenger_route_found_view}. 
+Na pasku narzędzi na górze pojawia się ikona książki, po kliknięciu jej użytkownikowi wyświetlana jest lista jego rezerwacji oraz ich statusy.
+W przypadku zaakceptowanej przez kierowcę rezerwacji, pasażer otrzymuje również numer kontaktowy do kierowcy, co pokazano na rysunku \ref{fig:impl_passenger_reservation_confirmed_view}. 
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{rys04/Passenger_view.png}
+	\caption{Strona główna pasażera}
+	\label{fig:impl_passenger_main_page}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{rys04/Passenger_route_found_view.png}
+	\caption{Widok znalezionej trasy}
+	\label{fig:impl_passenger_route_found_view}
+\end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.7\linewidth]{rys04/Passenger_reservation_confirmed_view_cropped.png}
+	\caption{Widok rezerwacji po potwierdzeniu}
+	\label{fig:impl_passenger_reservation_confirmed_view}
+\end{figure}
+
+Strona kierowcy przedstawiona na rysunku \ref{fig:impl_driver_main_page_cropped} jest bardzo podobna do strony głównej pasażera.
+Różni się ona tym, że panel po lewej stronie mapy ma dodatkowe opcje związane z ustaleniem detali trasy, takich jak między innymi umowna nazwa puntu odbioru (np.\ Parking pod sklepem).
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{rys04/Driver_view.png}
+	\caption{Strona główna kierowcy}
+	\label{fig:impl_driver_main_page_cropped}
+\end{figure}
+Podobnie jak w przypadku strony pasażera, strona kierowcy posiada przycisk do przeglądania rezerwacji.
+Kierowca jednak ma możliwość wyświetlenia rezerwacji na jego oferty przejazdu oraz na zmianę statusów tych rezerwacji co pokazano na rysunku \ref{fig:impl_driver_reservations_view}.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.7\linewidth]{rys04/Driver_reservations_view_cropped.png}
+	\caption{Widok rezerwacji na trasy kierowcy}
+	\label{fig:impl_driver_reservations_view}
+\end{figure}
+Obok ikony rezerwacji pojawia się również ikona samochodu.
+Jeśli kierowca chce zmienić dane swojego pojazdu w celu zmiany liczby wolnych foteli, spalania, numeru rejestracyjnego oraz nazwy pojazdu, może to zrobić za pomocą widoku przedstawionego na rysunku \ref{fig:impl_driver_car_view}. 
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.7\linewidth]{rys04/Driver_car_view_cropped.png}
+	\caption{Widok danych samochodu kierowcy}
+	\label{fig:impl_driver_car_view}
+\end{figure}
+Ostatnia, trzecia ikona na pasku narzędzi odpowiada za zarządzanie trasami kierowcy. Widoki widoczne na rysunku \ref{fig:impl_driver_routes} przedstawiają listę tras kierowcy wraz ze szczegółami, jak i panel rekomendacji trasy. 
+Na liście tras możliwe jest ich odwołanie. Po wejściu w panel rekomendacji pojawia się widok z mapą przedstawiającą sugerowaną trasę oraz kalkulator kosztów przejazdu. 
+Bierze on pod uwagę dystans do przebycia, spalanie, cenę paliwa oraz liczbę osób w samochodzie.
+\begin{figure}[h]
+  \centering
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys04/Driver_routes_view_cropped.png}
+
+    (a) Widok tras kierowcy
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.475\textwidth}
+    \centering
+    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys04/Driver_route_details_view_cropped.png}
+
+    (b) Widok przebiegu trasy i kalkulatora
+  \end{minipage}
+  \caption{Widoki tras i ich detali.}
+  \label{fig:impl_driver_routes}
+\end{figure}
+
+\newpage
+
 \subsection{Integracja z REST API}
+\texttt{App.tsx} ,,opakowuje'' router w \texttt{AuthProvider}, który przechowuje token JWT oraz token odświeżania, pokazano to na listingu \ref{list:app_tsx}.
+Same żądania do API przechodzą przez \texttt{ApiClient}, który dołącza token do nagłówków żądań. 
+Gdy API zwróci kod błędu \texttt{401}, klient próbuje odświeżyć token przy użyciu tokena odświeżania i ponowić żądanie.
+\texttt{ProtectedRoute} używa \texttt{useAuth} do sprawdzenia, czy użytkownik jest zalogowany oraz czy posiada odpowiednie role na podstawie tokena JWT.
+Wszystkie ścieżki poszczególnych punktów końcowych znajdują się w pliku \texttt{Consts.ts}.
+
+\begin{lstlisting}[label=list:app_tsx,caption=Zawartość pliku App.tsx,style=JavaScriptStyle]
+[...]
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <ThemeProvider theme={theme}>
+            <AuthProvider>
+                <CssBaseline />
+                <RouterProvider router={routings} />
+            </AuthProvider>
+        </ThemeProvider>
+    </React.StrictMode>
+)
+\end{lstlisting}
