@@ -144,7 +144,7 @@ Jak wspomniano przy opisie wzorca CQRS, mediator został wykorzystany do scentra
 Mediator ułatwia modyfikację, rozszerzanie i ponowne wykorzystanie komponentów.
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\linewidth]{rys03/Mediator_comparison.drawio_cropped.pdf}
+	\includegraphics[scale=1.2]{rys03/Mediator_comparison.pdf}
 	\caption{Przykład zastosowania wzorca mediatora}
 	\label{fig:mediator_comparison}
 \end{figure}
@@ -184,7 +184,7 @@ Klient wysyła żądanie w postaci \texttt{CreateCarRequest} do kontrolera \text
 Mediator następnie przekazuje komendę do odpowiedniego handlera posiadającego metodę \texttt{Handle}, która realizuje logikę biznesową związaną z tworzeniem samochodu.
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=1\linewidth]{rys03/Mediator_sequence.drawio.pdf}
+	\includegraphics[scale=.65]{rys03/Mediator_sequence.pdf}
 	\caption{Diagram interakcji mediatora na przykładzie funkcji tworzenia samochodu}
 	\label{fig:mediator_sequence}
 \end{figure}
@@ -237,25 +237,25 @@ Pierwszą częścią algorytmu jest wstępne odfiltrowanie tras kierowców za po
 Użyta jest metoda \texttt{AsNoTracking}, która informuje \texttt{EF Core}, żeby nie śledził zmian w pobranych obiektach, co poprawia wydajność zapytania.
 Jeżeli po wstępnym odfiltrowaniu nie będzie trasy spełniającej kryteria metoda zwraca \texttt{null}.
 \begin{lstlisting}[label=list:linqFilter,caption=Wstępne odfiltrowanie tras kierowców,style=sharpcstyle]
-        var candidateIds = await _dbContext.Routes
-            .AsNoTracking()
-            .Where(r => r.DepartureTime > now)
-            .Where(r => r.ArrivalTime < query.ArrivalTime)
-            .Where(r => EF.Functions.IsWithinDistance(r.Start, start, query.SearchRadiusMeters, true))
-            .Where(r => EF.Functions.IsWithinDistance(r.End, end, query.SearchRadiusMeters, true))
-            .Where(r => _dbContext.Cars.Any(car =>
-                car.DriverId == r.DriverId &&
-                car.Seats > _dbContext.Reservations.Count(x =>
-                    x.RouteId == r.Id && x.Status == ReservationStatus.Accepted)))
-            .OrderBy(r => EF.Functions.Distance(r.Start, start, true)
-                          + EF.Functions.Distance(r.End, end, true))
-            .Select(r => r.Id)
-            .ToArrayAsync(ct);
+var candidateIds = await _dbContext.Routes
+    .AsNoTracking()
+    .Where(r => r.DepartureTime > now)
+    .Where(r => r.ArrivalTime < query.ArrivalTime)
+    .Where(r => EF.Functions.IsWithinDistance(r.Start, start, query.SearchRadiusMeters, true))
+    .Where(r => EF.Functions.IsWithinDistance(r.End, end, query.SearchRadiusMeters, true))
+    .Where(r => _dbContext.Cars.Any(car =>
+        car.DriverId == r.DriverId &&
+        car.Seats > _dbContext.Reservations.Count(x =>
+            x.RouteId == r.Id && x.Status == ReservationStatus.Accepted)))
+    .OrderBy(r => EF.Functions.Distance(r.Start, start, true)
+                  + EF.Functions.Distance(r.End, end, true))
+    .Select(r => r.Id)
+    .ToArrayAsync(ct);
 
-        if (candidateIds.Length == 0)
-        {
-            return null;
-        }
+if (candidateIds.Length == 0)
+{
+    return null;
+}
 \end{lstlisting}
 
 Następna część algorytmu jest zaimplementowana w języku SQL ze względu na to, że operacji przestrzennych, np.\ \texttt{pgr\_dijkstraCost} nie da się wywołać z poziomu kodu \texttt{C\#}.
@@ -271,22 +271,22 @@ Pasażer w interfejsie użytkownika może wybrać miejsce niebędące węzłem g
 Dwa podzapytania wybierają węzły najbliższe punktowi początkowemu i końcowemu pasażera. 
 Operator \texttt{<->}, pochodzący z rozszerzenia \texttt{PostGIS}, służy do obliczania odległości między geometriami w przestrzeni 2D.
 \begin{lstlisting}[label=list:sqlClosestNodes,caption=Wybór węzłów najbliższych punktom pasażera,style=sqlstyle]
-        WITH vertices AS (
-        SELECT source AS id, ST_SetSRID(ST_MakePoint(x1, y1), 4326) AS geom
-        FROM public.ds_2po_4pgr
-        UNION
-        SELECT target AS id, ST_SetSRID(ST_MakePoint(x2, y2), 4326) AS geom
-        FROM public.ds_2po_4pgr
-    ),
-    q AS (
-        SELECT
-            (SELECT id::bigint FROM vertices
-             ORDER BY geom <-> ST_SetSRID(ST_MakePoint({start.X}, {start.Y}), 4326)
-             LIMIT 1) AS start_vid,
-            (SELECT id::bigint FROM vertices
-             ORDER BY geom <-> ST_SetSRID(ST_MakePoint({end.X}, {end.Y}), 4326)
-             LIMIT 1) AS end_vid
-    ),
+WITH vertices AS (
+  SELECT source AS id, ST_SetSRID(ST_MakePoint(x1, y1), 4326) AS geom
+  FROM public.ds_2po_4pgr
+  UNION
+  SELECT target AS id, ST_SetSRID(ST_MakePoint(x2, y2), 4326) AS geom
+  FROM public.ds_2po_4pgr
+),
+q AS (
+  SELECT
+    (SELECT id::bigint FROM vertices
+     ORDER BY geom <-> ST_SetSRID(ST_MakePoint({start.X}, {start.Y}), 4326)
+     LIMIT 1) AS start_vid,
+     (SELECT id::bigint FROM vertices
+     ORDER BY geom <-> ST_SetSRID(ST_MakePoint({end.X}, {end.Y}), 4326)
+     LIMIT 1) AS end_vid
+),
 \end{lstlisting}
 Podobnie jak w poprzednim zapytaniu, tutaj również należy wybrać węzły najbliższe punktom startowym i końcowym tras kandydujących.
 Z racji na to, iż tras kandydujących jest wiele, wymagane było użycie \texttt{CROSS JOIN LATERAL}, które wykonuje zapytanie dla każdego wiersza tabeli z danymi trasy.
@@ -312,36 +312,36 @@ Drogi traktowane są jako graf nieskierowany (zachowanie określone przez ostatn
 ze względu na to, iż pieszych nie obowiązują kierunki ruchu drogowego, mają jedynie trzymać się prawej strony drogi.
 W przypadku, gdy początek trasy jest tym samym węzłem, co punkt startowy pasażera, przypisywany jest koszt 0, obsługuje to fragment kodu z użyciem operatora \texttt{UNION ALL}.
 \begin{lstlisting}[label=list:sqlDistCalc,caption=Obliczenie odległości między punktami,style=sqlstyle]
-    leg1 AS (
-        SELECT end_vid, agg_cost
-        FROM pgr_dijkstraCost(
-            'SELECT id, source, target, cost, reverse_cost FROM public.ds_2po_4pgr',
-            (SELECT start_vid FROM q),
-            (SELECT array_agg(DISTINCT route_start_vid) FROM candidates
-            WHERE route_start_vid <> (SELECT start_vid FROM q)),
-            directed := false)
-        UNION ALL
-        SELECT start_vid, 0::double precision
-        FROM q
-        WHERE EXISTS (
-            SELECT 1 FROM candidates
-            WHERE route_start_vid = q.start_vid)
-    ),
-    leg2 AS (
-        SELECT start_vid, agg_cost
-        FROM pgr_dijkstraCost(
-            'SELECT id, source, target, cost, reverse_cost FROM public.ds_2po_4pgr',
-            (SELECT array_agg(DISTINCT route_end_vid) FROM candidates
-            WHERE route_end_vid <> (SELECT end_vid FROM q)),
-            (SELECT end_vid FROM q),
-            directed := false)
-        UNION ALL
-        SELECT end_vid, 0::double precision
-        FROM q
-        WHERE EXISTS (
-            SELECT 1 FROM candidates
-            WHERE route_end_vid = q.end_vid)
-    )
+leg1 AS (
+    SELECT end_vid, agg_cost
+    FROM pgr_dijkstraCost(
+        'SELECT id, source, target, cost, reverse_cost FROM public.ds_2po_4pgr',
+        (SELECT start_vid FROM q),
+        (SELECT array_agg(DISTINCT route_start_vid) FROM candidates
+        WHERE route_start_vid <> (SELECT start_vid FROM q)),
+        directed := false)
+    UNION ALL
+    SELECT start_vid, 0::double precision
+    FROM q
+    WHERE EXISTS (
+        SELECT 1 FROM candidates
+        WHERE route_start_vid = q.start_vid)
+),
+leg2 AS (
+    SELECT start_vid, agg_cost
+    FROM pgr_dijkstraCost(
+        'SELECT id, source, target, cost, reverse_cost FROM public.ds_2po_4pgr',
+        (SELECT array_agg(DISTINCT route_end_vid) FROM candidates
+        WHERE route_end_vid <> (SELECT end_vid FROM q)),
+        (SELECT end_vid FROM q),
+        directed := false)
+    UNION ALL
+    SELECT end_vid, 0::double precision
+    FROM q
+    WHERE EXISTS (
+        SELECT 1 FROM candidates
+        WHERE route_end_vid = q.end_vid)
+)
 \end{lstlisting}
 Końcowe zapytanie \texttt{SELECT} sumuje koszty obu odcinków trasy, sortuje wyniki rosnąco, a \texttt{LIMIT 1} zostawia trasę o najmniejszym koszcie.
 \begin{lstlisting}[label=list:sqlFinish,caption=Zsumowanie kosztów i wybór najlepszej trasy,style=sqlstyle]
@@ -353,8 +353,8 @@ Końcowe zapytanie \texttt{SELECT} sumuje koszty obu odcinków trasy, sortuje wy
             JOIN leg2 l2 ON l2.start_vid = c.route_end_vid
         ORDER BY "TotalDistance"
         LIMIT 1
-        """)
 \end{lstlisting}
+% TO DO: usunąłem         """)
 \texttt{FirstOrDefaultAsync(ct)} zwraca wynik jako \texttt{RouteDistance} lub \texttt{null}, jeśli nie znaleziono odpowiedniej trasy.
 % też podkreśla ale jest takie słowo https://sjp.pl/zmapowa%C4%87
 Jeśli zwrócono ID trasy, następuje zmapowanie danych trasy z bazy danych na obiekt \texttt{RouteDto}.

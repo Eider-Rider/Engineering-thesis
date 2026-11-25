@@ -8,24 +8,14 @@ Charakteryzuje się intuicyjnym interfejsem użytkownika oraz szeroką bazą uż
 Ma ona również swoje wady, jak pobierane opłat za korzystanie z usług oraz ograniczą dostępność w niektórych regionach (np.\ w Stanach Zjednoczonych). Ponadto, do wyników wyszukiwania przejazdów dodawane są oferty komunikacji zbiorowej,
 takie jak autobusy czy pociągi. Może to wpłynąć na łatwość znalezienia przejazdu samochodem, który może być głównym celem użytkownika.
 Przykładowe ekrany aplikacji inOneCar przedstawiono na rysunku~\ref{fig:blablacar-screens}.
-% TO DO: aby "upiększyć" pracę może Pan zamieścić zrzuty z ekranów opisywanych aplikacji (prawo cytatu pozwala takie zrzuty zrobić)
-% DONE: Dodałem zrzuty ekranów, pokombinowałem ze skalowaniem obrazów i na razie się mniej więcej dobrze mieści
+
 \begin{figure}[htb]
-  \centering
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/BlaBlaCar2.png}
-
-    (a) Ekran główny
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/BlaBlaCar1.png}
-
-    (b) Wybór wariantu przejazdu i opłata serwisowa
-  \end{minipage}
-  \caption{Ekrany aplikacji BlaBlaCar. Źródło: opracowanie własne \cite{BlaBlaCarApp}.}
+\centering
+\begin{tabular}{ll}
+a) \vtop{\vskip-2ex\hbox{\includegraphics[scale=0.15]{rys02/BlaBlaCar2.png}}} & 
+b) \vtop{\vskip-2ex\hbox{\includegraphics[scale=0.15]{rys02/BlaBlaCar1.png}}}
+\end{tabular}
+  \caption{Ekrany aplikacji BlaBlaCar: a) ekran główny, b) wybór wariantu przejazdu \cite{BlaBlaCarApp}.}
   \label{fig:blablacar-screens}
 \end{figure}
 \newpage
@@ -38,26 +28,18 @@ przez administratorów systemu. Jak wspomniano we wstępie, kryterium stworzenia
 W przypadku braku wystarczającej liczby zgłoszeń, kierowcy nie mogą oferować przejazdów na tej trasie. Zdecydowanie ogranicza to swobodę kierowców w oferowaniu przejazdów
 na mało popularnych trasach, co pogarsza sytuację wykluczenia komunikacyjnego w mniejszych miejscowościach.
 Przykładowe ekrany aplikacji inOneCar przedstawiono na rysunku~\ref{fig:inonecar-screens}.
+
 \begin{figure}[htb]
-  \centering
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/InOneCar1.png}
-
-    (a) Lista nadchodzących przejazdów
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{rys02/InOneCar2.png}
-
-    (b) Komunikat o niedostępności usługi na danym obszarze
-  \end{minipage}
-  \caption{Ekrany aplikacji inOneCar. Źródło: opracowanie \cite{InOneCarApp}.}
+\centering
+\begin{tabular}{ll}
+a) \vtop{\vskip-2ex\hbox{\includegraphics[scale=0.15]{rys02/InOneCar1.png}}} & 
+b) \vtop{\vskip-2ex\hbox{\includegraphics[scale=0.15]{rys02/InOneCar2.png}}}}
+\end{tabular}
+  \caption{Ekrany aplikacji inOneCar: a) lista nadchodzących przejazdów, b) komunikat o niedostępności usługi na danym obszarze \cite{InOneCarApp}.}
   \label{fig:inonecar-screens}
 \end{figure}
 
-\newpage
+
 \section{Analiza wymagań funkcjonalnych i niefunkcjonalnych}
 Aby określić funkcjonalności, jakie powinien oferować projektowany system, w pierwszej kolejności zdefiniowano jego wymagania funkcjonalne i niefunkcjonalne. 
 Na ich podstawie opracowano diagram wymagań.
@@ -160,7 +142,7 @@ Dzięki mechanizmowi migracji, pozwala na automatyczne generowanie i aktualizowa
 % DONE: Przerysowałem diagram
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.8\linewidth]{rys02/Conceptual_model.pdf}
+	\includegraphics[scale=1]{rys02/Conceptual_model.pdf}
 	\caption{Diagram relacji encji w bazie danych}
 	\label{fig:entity-relationship-diagram}
 \end{figure}
@@ -191,21 +173,13 @@ Trzeci jest podobny do widoku rezerwacji pasażera, jednak w przypadku kierowcy,
 
 
 \begin{figure}[htb]
-  \centering
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_rejestracji.png}
-
-    (a) Widok rejestracji
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_logowania.png}
-
-    (b) Widok logowania
-  \end{minipage}
-  \caption{Widoki rejestracji i logowania.}
+\centering
+\begin{tabular}{ll}
+a) & b) \\
+\vtop{\vskip-2ex\hbox{\includegraphics[scale=0.55]{rys02/Widok_rejestracji.png}}}
+\vtop{\vskip-2ex\hbox{\includegraphics[scale=0.55]{rys02/Widok_logowania.png}}}
+\end{tabular}
+  \caption{Widoki: a) rejestracji, b) logowania.}
   \label{fig:register-login-views}
 \end{figure}
 
@@ -217,21 +191,13 @@ Trzeci jest podobny do widoku rezerwacji pasażera, jednak w przypadku kierowcy,
 \end{figure}
 
 \begin{figure}[htb]
-  \centering
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_rezerwacji_pasazer.png}
-
-    (a) Widok rezerwacji pasażera
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_znalezionej_trasy.png}
-
-    (b) Widok znalezionej trasy
-  \end{minipage}
-  \caption{Pomniejsze widoki pasażera.}
+\centering
+\begin{tabular}{ll}
+a) & b) \\
+\vtop{\vskip-2ex\hbox{\includegraphics[scale=0.55]{rys02/Widok_rezerwacji_pasazer.png}}} &
+\vtop{\vskip-2ex\hbox{\includegraphics[scale=0.55]{rys02/Widok_znalezionej_trasy.png}}}
+\end{tabular}
+  \caption{Pomniejsze widoki pasażera: a) rezerwacji, b) znalezionej trasy.}
   \label{fig:passenger-mini-views}
 \end{figure}
 
@@ -242,28 +208,15 @@ Trzeci jest podobny do widoku rezerwacji pasażera, jednak w przypadku kierowcy,
 	\label{fig:driver-view}
 \end{figure}
 
+
 \begin{figure}[htb]
-  \centering
-  \begin{minipage}[t]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_auta.png}
-
-    (a) Widok danych samochodu
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_tras.png}
-
-    (b) Widok tras kierowcy
-  \end{minipage}
-    \hfill
-  \begin{minipage}[t]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.475\textheight,keepaspectratio]{rys02/Widok_rezerwacji.png}
-
-    (c) Widok rezerwacji kierowcy
-  \end{minipage}
-  \caption{Pomniejsze widoki interfejsu kierowcy.}
+\centering
+\begin{tabular}{lll}
+a) & b) & c) \\
+\vtop{\vskip-2ex\hbox{\includegraphics[scale=0.55]{rys02/Widok_auta.png}}} &
+\vtop{\vskip-2ex\hbox{\includegraphics[scale=0.55]{rys02/Widok_tras.png}}} &
+\vtop{\vskip-2ex\hbox{\includegraphics[scale=0.55]{rys02/Widok_rezerwacji.png}}}
+\end{tabular}
+  \caption{Pomniejsze widoki interfejsu kierowcy: a) danych samochodu, b) tras kierowcy, c) rezerwacji kierowcy.}
   \label{fig:driver-mini-views}
 \end{figure}
